@@ -49,8 +49,8 @@ pub fn play(month: &str) {
         ],
         patterns: 
         vec![
-            vec![69 as f32,0.0],
-            vec![69 as f32,0.0]
+            vec![69.0,0.0],
+            vec![69.0,0.0]
         ],
         volumes:
         vec![
@@ -176,7 +176,7 @@ pub fn play(month: &str) {
 
     
     
-    println!("{},{},{}", currentmusic.bpm, currentmusic.bpm/60.0,  currentmusic.bpm/60.0/16.0);
+    println!("{},{},{}", currentmusic.bpm, currentmusic.bpm/60.0/16.0,  currentmusic.bpm/60.0/16.0);
 
     
     for song in 0..(currentmusic.song[0].len()*currentmusic.patterns[0].len()) {
@@ -315,7 +315,6 @@ pub fn beep() {
         sawmix.0.add(source);
     }
     player.append(sawmix.1);
-
     player.sleep_until_end();
 }
 

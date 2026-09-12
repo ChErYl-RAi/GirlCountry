@@ -51,6 +51,7 @@ struct Girl{
 }
 
 fn main(){
+
     let (mut rl, thread) = raylib::init()
         .size(768, 640)
         .title("GirlCountry")
@@ -65,6 +66,7 @@ fn main(){
     let bridge_sprite = rl.load_texture(&thread, "assets/bridge.png").unwrap();
     let cursor = rl.load_texture(&thread, "assets/select.png").unwrap();
     let talk_sprite = rl.load_texture(&thread, "assets/talk.png").unwrap();
+    let work_sprite = rl.load_texture(&thread, "assets/work.png").unwrap();
     let tree_sprite = rl.load_texture(&thread, "assets/tree.png").unwrap();
     let bush_sprite = rl.load_texture(&thread, "assets/bush.png").unwrap();
     let wall_sprite = rl.load_texture(&thread, "assets/wall.png").unwrap();
@@ -317,13 +319,33 @@ fn main(){
                 synth::play(mus2[mxs2]);
             });
         }
+        for girl in &mut girls{
+            if girl.mode ==GirlModes::Work{
+                girl.mode=GirlModes::Idle;
+            }
+        }
 
         for y in 0..50{
             for x in 0..50{
                 let mut girlnum = 0;
-                for girl in &girls{
-                    if (x-1 == girl.x && y == girl.y) || (x+1 == girl.x && y == girl.y) || (x == girl.x && y-1 == girl.y) || (x == girl.x && y+1 == girl.y){
+                for girl in &mut girls{
+                    if ((x-1 == girl.x && y == girl.y-1) || (x+1 == girl.x && y == girl.y+1) || (x == girl.x && y-1 == girl.y) || (x == girl.x && y+1 == girl.y)) && map[x as usize][y as usize].progress<12 && girl.mode==GirlModes::Idle{
                         girlnum+=1;
+                        girl.mode=GirlModes::Work;
+                    }
+                    if map[x as usize][y as usize].progress<12 && girl.mode==GirlModes::Work{
+                        if (x-1 == girl.x && y == girl.y-1){
+                            girl.rot=4;
+                        }
+                        else if (x+1 == girl.x && y == girl.y+1){
+                            girl.rot=0;
+                        }
+                        else if (x == girl.x && y-1 == girl.y){
+                            girl.rot=2;
+                        }
+                        else if (x == girl.x && y+1 == girl.y){
+                            girl.rot=6;
+                        }
                     }
                 }
                 if girlnum==1 && progress1{
@@ -601,6 +623,8 @@ fn main(){
                         }
                         if girl.mode==GirlModes::Interact{
                             d.draw_texture(&talk_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                        } else if girl.mode==GirlModes::Work{
+                            d.draw_texture(&work_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
                         }
                     }
                 }
