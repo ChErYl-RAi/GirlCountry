@@ -1,3 +1,4 @@
+use noise::{Perlin, Vector2, core::perlin::perlin_2d, permutationtable::PermutationTable};
 use raylib::{ffi::{CSSPalette, RaylibPalette}, prelude::*};
 use rand;
 use std::{i32, thread};
@@ -116,6 +117,12 @@ fn main(){
     let res_wood =  10;
     let res_food =  10;
     let res_stone = 10;
+
+    let mut bellring = false;
+
+    let mut bells =thread::spawn(move || {
+        synth::mynothing();
+    });
     
     let mut posx: f32 = rand::random_range(400..3600) as f32;
     let mut posy: f32 = rand::random_range(-30..770) as f32;
@@ -126,17 +133,38 @@ fn main(){
     let mut partners: Vec<Vec<i32>> = vec![];
     let mut plantlocs: Vec<Vec<i32>> = vec![];
 
+    let girlcum: u32 = rand::random(); // get it because seed
+    let hasher = PermutationTable::new(girlcum) ;
+    let mut initialhmapvec: Vec<Vec<i32>> = vec![];
+    
+    for x in 0..50{
+        let v=vec![];
+        initialhmapvec.push(v);
+        for y in 0..50{
+            initialhmapvec[x].push ( 
+                ((perlin_2d(Vector2::new(((x as f32)/30.0) as f64, ((y as f32)/30.0) as f64), &hasher) / 2.0 +0.5)*5.0-2.0).floor() as i32
+            );
+            if initialhmapvec[x][y] < 0{
+                initialhmapvec[x][y] = 0;
+            }
+        }
+    }
+
+    
+
+    println!("{:?}",initialhmapvec);
+
     for i in 0..50{
         let mut tmp: Vec<Tile> = vec![];
         for j in 0..50{
             if i <23 || i>27{
-                if j > 3{
+                
                     if rand::random_bool(0.1){
                         if rand::random_bool(0.5){
                             tmp.push(
                                 Tile{
                                     tile: TileType::Tree,
-                                    height: 0,
+                                    height: initialhmapvec[i as usize][j as usize],
                                     progress:12
                                 }
                             );
@@ -145,7 +173,7 @@ fn main(){
                             tmp.push(
                                 Tile{
                                     tile: TileType::Bush,
-                                    height: 0,
+                                    height: initialhmapvec[i as usize][j as usize],
                                     progress:12
                                 }
                             );
@@ -155,7 +183,7 @@ fn main(){
                         tmp.push(
                             Tile{
                                 tile: TileType::Grass,
-                                height: 0,
+                                height: initialhmapvec[i as usize][j as usize],
                                 progress:12
                             }
                         );
@@ -166,26 +194,7 @@ fn main(){
                             occupiedtiles.push(vec![i,j]);
                         }
                     }
-                } else {
-                    if rand::random_bool(0.1){
-                        tmp.push(
-                            Tile{
-                                tile: TileType::Bush,
-                                height: 1,
-                                progress:12
-                            }
-                        );
-                        plantlocs.push(vec![i,j]);
-                    } else {
-                        tmp.push(
-                            Tile{
-                                tile: TileType::Grass,
-                                height: 1,
-                                progress:12
-                            }
-                        );
-                    }
-                }
+                
             } else {
                 if j == 48-i || j==47-i || j==49-i{
                     tmp.push(
@@ -310,14 +319,23 @@ fn main(){
 
         if music.is_finished()
         {
+            if !bellring{
+            bells =thread::spawn(move || {
+                synth::bells();
+            });
             month+=1;
             if month ==13 { month =0; } ;
-            music.join().unwrap();
-            let mus2 =months.clone();
-            let mxs2 = month.clone();
-            music = thread::spawn(move || {
-                synth::play(mus2[mxs2]);
-            });
+            bellring=true;
+            }
+            if bells.is_finished(){
+                music.join().unwrap();
+                let mus2 =months.clone();
+                let mxs2 = month.clone();
+                bellring=false;
+                music = thread::spawn(move || {
+                    synth::play(mus2[mxs2]);
+                });
+            }
         }
         for girl in &mut girls{
             if girl.mode ==GirlModes::Work{

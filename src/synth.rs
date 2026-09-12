@@ -156,10 +156,54 @@ pub fn play(month: &str) {
             vec![3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]
         ]
     };
+
+    let february = Tune
+    {
+        bpm:160.0,
+        tracks:5,
+
+        instruments:vec![
+            Instruments::Sine,
+            Instruments::Triangle,
+            Instruments::Saw
+        ],
+
+        patterns: vec![
+            vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            vec![79.0, 79.0, 79.0, 79.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 84.0, 84.0, 84.0, 84.0],
+            vec![55.0, 55.0, 60.0, 60.0, 60.0, 60.0, 62.0, 62.0, 62.0, 62.0, 55.0, 55.0, 55.0, 55.0, 57.0, 57.0],
+            vec![48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 48.0, 50.0, 50.0, 50.0, 50.0, 53.0, 53.0, 53.0, 53.0],
+            vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        ],
+
+        volumes: vec![
+            vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            vec![1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125, ],
+            vec![1.0, 0.5, 1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125, 1.0, 0.5],
+            vec![1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125, 1.0, 0.5, 0.25, 0.125],
+            vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        ],
+        
+        types: vec![
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+        ],
+
+        song:vec![
+            vec![1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            vec![0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2],
+            vec![0,0,0,0,0,0,0,0,3,3,3,3,3,3,3,3]
+        ]
+    };
 //
     if month=="January"{
         currentmusic=january;
-    }
+    } else if month=="February"{
+        currentmusic=february;
+    } 
 
     // _stream must live as long as the sink
     let handle = rodio::DeviceSinkBuilder::open_default_sink()
@@ -317,6 +361,30 @@ pub fn beep() {
     player.append(sawmix.1);
     player.sleep_until_end();
 }
+
+
+pub fn mynothing() {
+
+}
+
+
+pub fn bells() {
+    let handle = rodio::DeviceSinkBuilder::open_default_sink()
+            .expect("open default audio stream");
+    let player = rodio::Player::connect_new(&handle.mixer());
+    let tune = [69.0, 73.0, 71.0, 64.0, 0.0, 69.0, 71.0, 73.0, 69.0, 0.0, 73.0, 71.0, 69.0, 64.0, 0.0, 69.0, 71.0, 73.0, 69.0, 0.0];
+    for note in tune{
+        let sawmix = mixer(NonZeroU16::new(1).unwrap(), NonZeroU32::new(48000).unwrap());
+        for i in 0..5{
+            let source = SineWave::new(440.0*(2.0 as f32).powf( (note - 69.0)/12.0 ) * (i*2+1) as f32).take_duration(Duration::from_secs_f32(1.0)).amplify(0.03).fade_out(Duration::from_secs_f32(1.0));
+            sawmix.0.add(source);
+        }
+        player.append(sawmix.1);
+    }
+    player.sleep_until_end();
+    //sleep(Duration::from_secs((0.5*19.0) as u64));
+}
+
 
 pub fn tada() {
     let handle = rodio::DeviceSinkBuilder::open_default_sink()
