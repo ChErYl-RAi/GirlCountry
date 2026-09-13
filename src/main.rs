@@ -4,6 +4,7 @@ use rand;
 use std::{i32, thread};
 
 mod synth;
+mod jumpies;
 
 #[derive(PartialEq, Clone, Copy)]
 enum TileType {
@@ -859,4 +860,13 @@ fn draw_border_text(mut d:RaylibDrawHandle<'_>, txt:&str, size:i32, x:i32, y:i32
     d.draw_text(&txt, x+2, y+2, size, Color::BLACK);
 
     d.draw_text(&txt, x, y, size, Color::WHITE);
+}
+
+
+fn calculate_resources(tiletype:TileType) -> (i32,i32,i32) {
+
+
+
+
+    (1,1,1)
 }
