@@ -83,9 +83,15 @@ while True:
                     sleep(0.1245)
             if event.key == K_e:
                 petrn = []
+                vols = []
                 for i in range(len(pattern[0])):
                     petrn.append(pattern[0][i] + 0.0 )
+                    if pattern[0][i] == 0:
+                        vols.append( 0.0 )
+                    else:
+                        vols.append( 1.0 )
                 print(petrn)
+                print(vols)
             if event.key == K_UP:
                 updown += 1
             if event.key == K_DOWN:

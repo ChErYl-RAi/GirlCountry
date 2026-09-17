@@ -16,6 +16,7 @@ enum TileType {
     River,
     Bridge,
     Tree,
+    Rock,
     Bush,
     Wall,
     Sculpture,
@@ -73,7 +74,10 @@ fn main(){
     let bush_sprite = rl.load_texture(&thread, "assets/bush.png").unwrap();
     let wall_sprite = rl.load_texture(&thread, "assets/wall.png").unwrap();
     let sculpture_sprite = rl.load_texture(&thread, "assets/sculpture.png").unwrap();
+    let rock_sprite = rl.load_texture(&thread, "assets/stone.png").unwrap();
 
+
+    
     let message = "";
 
     let mut girls:Vec<Girl>= vec![];
@@ -115,9 +119,10 @@ fn main(){
         rl.load_texture(&thread, "assets/building11.png").unwrap(),
     ];
 
-    let res_wood =  10;
-    let res_food =  10;
-    let res_stone = 10;
+    let mut res_wood =  10;
+    let mut res_food =  10;
+    let mut res_stone = 10;
+    let mut res_monies = 50;
 
     let mut bellring = false;
 
@@ -161,7 +166,7 @@ fn main(){
             if i <23 || i>27{
                 
                     if rand::random_bool(0.1){
-                        if rand::random_bool(0.5){
+                        if rand::random_bool(0.33){
                             tmp.push(
                                 Tile{
                                     tile: TileType::Tree,
@@ -170,10 +175,19 @@ fn main(){
                                 }
                             );
                             plantlocs.push(vec![i,j]);
-                        }else{
+                        }else if rand::random_bool(0.5){
                             tmp.push(
                                 Tile{
                                     tile: TileType::Bush,
+                                    height: initialhmapvec[i as usize][j as usize],
+                                    progress:12
+                                }
+                            );
+                            plantlocs.push(vec![i,j]);
+                        } else {
+                            tmp.push(
+                                Tile{
+                                    tile: TileType::Rock,
                                     height: initialhmapvec[i as usize][j as usize],
                                     progress:12
                                 }
@@ -222,6 +236,7 @@ fn main(){
     let sky = Color::from_hex("a1afd4").unwrap();
 
 
+
     let mut abuildtimer=0.0;
     let mut bbuildtimer=0.0;
     let mut cbuildtimer=0.0;
@@ -231,7 +246,8 @@ fn main(){
     let mut progress3= false;
     let mut progress4= false;
 
-    let mut month = rand::random_range(0..13) ;
+    let mut month = 5;
+    //rand::random_range(0..13) ;
     let months = vec![
         "January",
         "February",
@@ -625,6 +641,8 @@ fn main(){
                     d.draw_texture(&bush_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
                 }   else if map[x as usize][y  as usize].tile==TileType::Tree{
                     d.draw_texture(&tree_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                }   else if map[x as usize][y  as usize].tile==TileType::Rock{
+                    d.draw_texture(&rock_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
                 } else if map[x as usize][y  as usize].tile==TileType::River{
                     map[x as usize][y  as usize].height = 0;
                     d.draw_texture(&river_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)+6, Color::WHITE); 
@@ -675,15 +693,31 @@ fn main(){
 
                         if canyou{
                             if map[x as usize][y as usize].tile==TileType::Grass || map[x as usize][y as usize].tile==TileType::River || map[x as usize][y as usize].tile==TileType::Bridge{
-                                map[x as usize][y as usize].tile = paintbrush;
-                                let _beep = thread::spawn(|| {
-                                    synth::beep();
-                                });
-                                if map[x as usize][y as usize].tile == TileType::Grass || map[x as usize][y as usize].tile == TileType::Bridge || map[x as usize][y as usize].tile == TileType::River{
-                                    map[x as usize][y as usize].progress = 12;
-                                } else {
-                                    map[x as usize][y as usize].progress = 0;
+                                let mut tmp_res = (0,0,0);
+
+                                tmp_res = calculate_resources(paintbrush); //wood food stone
+                                res_wood-=tmp_res.0;
+                                res_food-=tmp_res.1;
+                                res_stone-=tmp_res.2;
+                                if res_wood<0 || res_food<0 || res_stone<0{
+                                    let _beep = thread::spawn(|| {
+                                        synth::bark();
+                                    });
+                                res_wood+=tmp_res.0;
+                                res_food+=tmp_res.1;
+                                res_stone+=tmp_res.2;
+                                }else {
+                                    map[x as usize][y as usize].tile = paintbrush;
+                                    let _beep = thread::spawn(|| {
+                                        synth::beep();
+                                    });
+                                    if map[x as usize][y as usize].tile == TileType::Grass || map[x as usize][y as usize].tile == TileType::Bridge || map[x as usize][y as usize].tile == TileType::River{
+                                        map[x as usize][y as usize].progress = 12;
+                                    } else {
+                                        map[x as usize][y as usize].progress = 0;
+                                    }
                                 }
+                                
                             }
                             
                         }
@@ -698,9 +732,14 @@ fn main(){
 
                         if canyou{
                             if ! (map[x as usize][y as usize].tile==TileType::Grass || map[x as usize][y as usize].tile==TileType::River || map[x as usize][y as usize].tile==TileType::Bridge){
+                                let mut tmp_res = (0,0,0);
+                                tmp_res = calculate_resources(map[x as usize][y as usize].tile); //wood food stone
+                                res_wood+=tmp_res.0;
+                                res_food+=tmp_res.1;
+                                res_stone+=tmp_res.2;
                                 map[x as usize][y as usize].tile = TileType::Grass;
                                 let _beep = thread::spawn(|| {
-                                    synth::beep();
+                                    synth::pakala();
                                 });
                             }
                             
@@ -825,7 +864,7 @@ fn main(){
         d.draw_texture(&wall_sprite ,512+24,540,Color::WHITE);
 
 
-        d.draw_text(&("wood: ".to_string()+&res_wood.to_string()+"\nfood: "+&res_food.to_string()+"\nstone: "+&res_stone.to_string()),110,460,20,Color::BLACK);
+        d.draw_text(&("wood: ".to_string()+&res_wood.to_string()+"\nfood: "+&res_food.to_string()+"\nstone: "+&res_stone.to_string()+"\nmonies: "+&res_monies.to_string()),110,450,20,Color::BLACK);
 
         d.draw_text(months[month], 602, 19, 25, Color::CYAN);
         d.draw_text(months[month], 600, 17, 25, Color::BLACK);
@@ -863,10 +902,43 @@ fn draw_border_text(mut d:RaylibDrawHandle<'_>, txt:&str, size:i32, x:i32, y:i32
 }
 
 
-fn calculate_resources(tiletype:TileType) -> (i32,i32,i32) {
+fn calculate_resources(tiletype:TileType) -> (i32,i32,i32) { //wood food stone
+
+    if tiletype == TileType::A 
+    {
+        return (0,1,5);
+    } else if tiletype == TileType::Ball
+    {
+        return (2,3,6);
+    } else if tiletype == TileType::Bridge
+    {
+        return (1,1,0);
+    } else if tiletype == TileType::Factory
+    {
+        return (7,5,9);
+    } else if tiletype == TileType::House
+    {
+        return (6,2,0);
+    } else if tiletype == TileType::Sculpture
+    {
+        return (0,9,3);
+    } else if tiletype == TileType::Wall 
+    {
+        return (3,0,3);
+    }  else if tiletype == TileType::Tree 
+    {
+        return (2,0,0);
+    }  else if tiletype == TileType::Bush
+    {
+        return (0,2,0);
+    }  else if tiletype == TileType::Rock 
+    {
+        return (0,0,2);
+    } else
+    {
+        return (0,0,0);
+    }
 
 
-
-
-    (1,1,1)
+    
 }

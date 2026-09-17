@@ -1,6 +1,6 @@
 use std::{num::{NonZeroU16, NonZeroU32}, thread::sleep, time::{Duration, Instant}};
 
-use rodio::{Source, mixer::mixer, source::{Pink, SawtoothWave, SineWave, SquareWave, WhiteUniform}};
+use rodio::{Source, mixer::mixer, source::{self, Pink, SawtoothWave, SineWave, SquareWave, WhiteUniform, noise::Brownian}};
 
 struct Tune {
     bpm:f32,
@@ -198,11 +198,113 @@ pub fn play(month: &str) {
             vec![0,0,0,0,0,0,0,0,3,3,3,3,3,3,3,3]
         ]
     };
+
+
+
+    let mids = Tune {
+        bpm:160.0,
+        tracks: 10,
+        instruments: vec![
+            Instruments::Sqr, // beeps
+            Instruments::Sqr, // beeps
+            Instruments::Saw, // drone
+            Instruments::Puresaw, // melody
+            Instruments::Puresaw, // melody
+            Instruments::Triangle, // drone 2
+            Instruments::Sine, // beep
+            Instruments::Noise, // snare
+            Instruments::Saw, // bassdrum
+        ],
+        patterns: vec![
+            vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            vec![24.0, 0.0, 0.0, 0.0, 0.0, 0.0, 24.0, 0.0, 24.0, 0.0, 0.0, 0.0, 0.0, 0.0, 24.0, 0.0], // BASS DRUM              1
+            vec![0.0, 0.0, 0.0, 0.0, 12.0, 0.0, 0.0, 0.0, 0.0, 0.0, 12.0, 0.0, 0.0, 0.0, 0.0, 0.0], //snare                     2
+
+            vec![60.0, 0.0, 63.0, 0.0, 64.0, 0.0, 67.0, 0.0, 70.0, 0.0, 72.0, 0.0, 70.0, 0.0, 67.0, 0.0], // PART A BEEPS       3
+            vec![0.0, 0.0, 60.0, 0.0, 60.0, 0.0, 0.0, 0.0, 0.0, 0.0, 58.0, 0.0, 58.0, 0.0, 0.0, 0.0], // backbeeps              4
+            vec![60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 67.0, 67.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 67.0, 67.0], //melody 1 p1 5
+            vec![70.0, 70.0, 72.0, 72.0, 70.0, 70.0, 67.0, 67.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 67.0, 67.0], //melody 2 p1 6
+            vec![63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 67.0, 67.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 65.0, 65.0], //melody 3 p1 7
+            vec![60.0, 60.0, 62.0, 62.0, 60.0, 60.0, 70.0, 70.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 0.0, 0.0], //melody 4 p1   8
+            vec![72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0], // drone p1   9
+            vec![60.0, 60.0, 60.0, 60.0, 64.0, 64.0, 64.0, 64.0, 65.0, 65.0, 65.0, 65.0, 67.0, 67.0, 67.0, 67.0], // segue      10
+
+
+            vec![68.0, 0.0, 63.0, 0.0, 63.0, 0.0, 60.0, 0.0, 68.0, 0.0, 63.0, 0.0, 63.0, 0.0, 60.0, 0.0], // beep 1 p2          11
+            vec![63.0, 0.0, 60.0, 0.0, 60.0, 0.0, 56.0, 0.0, 63.0, 0.0, 60.0, 0.0, 60.0, 0.0, 56.0, 0.0], // Bbeep 1 p2         12
+            vec![63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0], // drone 1 p2  13
+
+            vec![68.0, 0.0, 62.0, 0.0, 62.0, 0.0, 58.0, 0.0, 68.0, 0.0, 62.0, 0.0, 62.0, 0.0, 58.0, 0.0], // beep 2 p2          14
+            vec![62.0, 0.0, 58.0, 0.0, 58.0, 0.0, 53.0, 0.0, 62.0, 0.0, 58.0, 0.0, 58.0, 0.0, 53.0, 0.0], // Bbeep 2 p2         15 
+            vec![62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0] // drn 2/3 p2  16
+        ],
+
+
+        song: vec![
+            vec![3, 3, 3, 3, 3, 3, 3, 3, 11,14], // beeps
+            vec![4, 4, 4, 4, 4, 4, 4, 4, 12,15], // beeps
+            vec![9, 9, 9, 9, 9, 9, 9, 9, 13,16], // drone
+            vec![5, 6, 7, 8, 5, 6, 7, 10,0, 0], // melody
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // melody
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // drone 2
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // beep
+            vec![2, 2, 2, 2, 2, 2, 2, 2, 0, 0], // snare
+            vec![1, 1, 1, 1, 1, 1, 1, 1, 0, 0], // bassdrum
+        ],
+
+        volumes: vec![
+            vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            vec![1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], // BASS DRUM
+            vec![0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0], //snare
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0], // PART A BEEPS
+            vec![0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0], // backbeeps
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 1.0, 1.0], //melody 1 p1
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 1.0, 1.0], //melody 2 p1
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 1.0, 1.0], //melody 1 p1
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 0.0, 0.0], //melody 2 p1
+            vec![0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3], // drone p1
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // segue
+
+            
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        ],
+
+        types: vec![
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Fadeout, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Fadeout, Types::Normal, Types::Fadeout, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Fadeout, Types::Normal], // BASS DRUM
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Fadeout, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Fadeout, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal], //snare
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout], // PART A BEEPS
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout], // backbeeps
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal], //melody 1 p1
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal], //melody 2 p1
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal], //melody 1 p1
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal], //melody 2 p1
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal], // drone p1
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal], // segue
+            
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+        ]
+
+    };
 //
     if month=="January"{
         currentmusic=january;
     } else if month=="February"{
         currentmusic=february;
+    }  else if month=="Mids"{
+        currentmusic=mids;
     } 
 
     // _stream must live as long as the sink
@@ -356,6 +458,30 @@ pub fn beep() {
 
     for i in 0..5{
         let source = SineWave::new(770.0 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(0.1)).amplify(0.2/((i+1) as f32)).fade_out(Duration::from_secs_f32(0.1));
+        sawmix.0.add(source);
+    }
+    player.append(sawmix.1);
+    player.sleep_until_end();
+}
+
+pub fn pakala() {
+    let handle = rodio::DeviceSinkBuilder::open_default_sink()
+            .expect("open default audio stream");
+    let player = rodio::Player::connect_new(&handle.mixer());
+
+    let source= Brownian::new(NonZeroU32::new(48000).unwrap()).take_duration(Duration::from_secs(1)).amplify(0.4).fade_out(Duration::from_secs_f32(0.3));
+    player.append(source);
+    player.sleep_until_end();
+}
+
+pub fn bark() {
+    let handle = rodio::DeviceSinkBuilder::open_default_sink()
+            .expect("open default audio stream");
+    let player = rodio::Player::connect_new(&handle.mixer());
+    let sawmix = mixer(NonZeroU16::new(1).unwrap(), NonZeroU32::new(48000).unwrap());
+
+    for i in 0..9{
+        let source = SineWave::new(80.0 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(0.2)).amplify(0.04);
         sawmix.0.add(source);
     }
     player.append(sawmix.1);
