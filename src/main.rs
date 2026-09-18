@@ -28,6 +28,7 @@ enum BrushType {
     Tile,
     Rise,
     Depress,
+    Girl,
 }
 
 struct Tile{
@@ -42,6 +43,7 @@ enum GirlModes{
     Going,
     Interact,
     Work,
+    Attent,
 }
 
 struct Girl{
@@ -51,6 +53,7 @@ struct Girl{
     col:bool,
     mode: GirlModes,
     cooldown:f32,
+    destination:Vec<i32>,
 }
 
 fn main(){
@@ -204,7 +207,7 @@ fn main(){
                         );
                         if rand::random_bool(0.04){
                             girls.push(
-                                Girl { x: i, y: j, rot: rand::random_range(0..8), col: rand::random_bool(0.5), mode:GirlModes::Idle, cooldown:1.0,}
+                                Girl { x: i, y: j, rot: rand::random_range(0..8), col: rand::random_bool(0.5), mode:GirlModes::Idle, cooldown:1.0,destination:vec![0,0]}
                             );
                             occupiedtiles.push(vec![i,j]);
                         }
@@ -413,6 +416,17 @@ fn main(){
         }
         
         for girl in &mut girls{
+            if girl.mode == GirlModes::Going{
+                if girl.cooldown <= 0.0{
+                    let dest= jumpies::find(girl.x,girl.y,girl.destination[0],girl.destination[1]);
+                    girl.x= dest[0];
+                    girl.y= dest[1];
+                    if girl.x == girl.destination[0] && girl.y == girl.destination[1] {
+                        girl.mode = GirlModes::Idle;
+                    }
+                    girl.cooldown = 0.2;
+                }
+            }
             if girl.mode==GirlModes::Idle{
             //girl rotate
             if rand::random_bool(0.01){
@@ -772,7 +786,34 @@ fn main(){
                                 map[x as usize][y as usize].height -= 1;
                             }
                         }
+                    }else if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) && paintbrushtype==BrushType::Girl{
+                        let mut canyou = true;
+
+                        for girl in &girls{
+                            if x == girl.x && y == girl.y{
+                                canyou=false;
+                            }
+                        }
+
+                        if canyou{
+                            for girl in &mut girls{
+                                if girl.mode == GirlModes::Attent{
+                                    girl.mode = GirlModes::Going;
+                                    girl.destination = vec![x,y];
+                                    paintbrushtype = BrushType::Tile;
+                                }
+                            }
+                        }
                     }
+                    if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT){
+                        for girl in &mut girls{
+                            if x == girl.x && y == girl.y && (girl.mode==GirlModes::Idle || girl.mode==GirlModes::Going){
+                                girl.mode = GirlModes::Attent;
+                                paintbrushtype = BrushType::Girl;
+                            }
+                        }
+                    }
+                    
                 }
             }
 
@@ -797,24 +838,25 @@ fn main(){
         d.draw_rectangle_lines(0, 500, 90, 24, Color::BLACK);
         d.draw_text("depress",2,502,20,Color::BLACK);
 
-
-        if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) 
-                && d.get_mouse_x()>0
-                && d.get_mouse_x()<80
-                && d.get_mouse_y()>470
-                && d.get_mouse_y()<494
-            {
-                paintbrushtype=BrushType::Rise
-            }
-        if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) 
-                && d.get_mouse_x()>0
-                && d.get_mouse_x()<90
-                && d.get_mouse_y()>500
-                && d.get_mouse_y()<524
-            {
-                paintbrushtype=BrushType::Depress
-            }
-
+        if paintbrushtype != BrushType::Girl{
+            if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) 
+                    && d.get_mouse_x()>0
+                    && d.get_mouse_x()<80
+                    && d.get_mouse_y()>470
+                    && d.get_mouse_y()<494
+                {
+                    paintbrushtype=BrushType::Rise
+                }
+            if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) 
+                    && d.get_mouse_x()>0
+                    && d.get_mouse_x()<90
+                    && d.get_mouse_y()>500
+                    && d.get_mouse_y()<524
+                {
+                    paintbrushtype=BrushType::Depress
+                }
+            
+        }
 
         let tmptypearr= vec![
             TileType::Grass,
@@ -833,15 +875,16 @@ fn main(){
                 d.draw_rectangle(67*i, 540, 64, 96, Color::YELLOW);
             }
             d.draw_rectangle_lines(67*i, 540, 64, 96, Color::BLACK);
-
-            if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) 
-                && d.get_mouse_x()>67*i
-                && d.get_mouse_x()<64+67*i
-                && d.get_mouse_y()>540
-                && d.get_mouse_y()<636
-            {
-                paintbrush= tmptypearr[i as usize];
-                paintbrushtype= BrushType::Tile;
+            if paintbrushtype != BrushType::Girl{
+                if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) 
+                    && d.get_mouse_x()>67*i
+                    && d.get_mouse_x()<64+67*i
+                    && d.get_mouse_y()>540
+                    && d.get_mouse_y()<636
+                {
+                    paintbrush= tmptypearr[i as usize];
+                    paintbrushtype= BrushType::Tile;
+                }
             }
         }
         d.draw_text("grass",2,540,17,Color::BLACK);
