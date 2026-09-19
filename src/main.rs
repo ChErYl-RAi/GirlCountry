@@ -56,6 +56,7 @@ struct Girl{
     mode: GirlModes,
     cooldown:f32,
     destination:Vec<i32>,
+    money:i32,
 }
 
 fn main(){
@@ -147,7 +148,7 @@ fn main(){
     let mut posy: f32 = rand::random_range(-30..770) as f32;
     let mut map: Vec<Vec<Tile>> = vec![];
     let mut occupiedtiles: Vec<Vec<i32>> = vec![];
-    let mut paintbrush = TileType::A;
+    let mut paintbrush = TileType::House;
     let mut paintbrushtype = BrushType::Tile;
     let mut partners: Vec<Vec<i32>> = vec![];
     let mut plantlocs: Vec<Vec<i32>> = vec![];
@@ -179,45 +180,65 @@ fn main(){
             if i <23 || i>27{
                 
                     if rand::random_bool(0.1){
-                        if rand::random_bool(0.33){
+                        if j == 48-i{
                             tmp.push(
                                 Tile{
-                                    tile: TileType::Tree,
+                                    tile: TileType::Road,
                                     height: initialhmapvec[i as usize][j as usize],
                                     progress:12
                                 }
                             );
-                            plantlocs.push(vec![i,j]);
-                        }else if rand::random_bool(0.5){
-                            tmp.push(
-                                Tile{
-                                    tile: TileType::Bush,
-                                    height: initialhmapvec[i as usize][j as usize],
-                                    progress:12
-                                }
-                            );
-                            plantlocs.push(vec![i,j]);
-                        } else {
-                            tmp.push(
-                                Tile{
-                                    tile: TileType::Rock,
-                                    height: initialhmapvec[i as usize][j as usize],
-                                    progress:12
-                                }
-                            );
-                            plantlocs.push(vec![i,j]);
+                        }else{
+                            if rand::random_bool(0.33){
+                                tmp.push(
+                                    Tile{
+                                        tile: TileType::Tree,
+                                        height: initialhmapvec[i as usize][j as usize],
+                                        progress:12
+                                    }
+                                );
+                                plantlocs.push(vec![i,j]);
+                            }else if rand::random_bool(0.5){
+                                tmp.push(
+                                    Tile{
+                                        tile: TileType::Bush,
+                                        height: initialhmapvec[i as usize][j as usize],
+                                        progress:12
+                                    }
+                                );
+                                plantlocs.push(vec![i,j]);
+                            } else {
+                                tmp.push(
+                                    Tile{
+                                        tile: TileType::Rock,
+                                        height: initialhmapvec[i as usize][j as usize],
+                                        progress:12
+                                    }
+                                );
+                                plantlocs.push(vec![i,j]);
+                            }
                         }
                     } else {
-                        tmp.push(
-                            Tile{
-                                tile: TileType::Grass,
-                                height: initialhmapvec[i as usize][j as usize],
-                                progress:12
-                            }
-                        );
+                        if j == 48-i{
+                            tmp.push(
+                                Tile{
+                                    tile: TileType::Road,
+                                    height: initialhmapvec[i as usize][j as usize],
+                                    progress:12
+                                }
+                            );
+                        }else{
+                            tmp.push(
+                                Tile{
+                                    tile: TileType::Grass,
+                                    height: initialhmapvec[i as usize][j as usize],
+                                    progress:12
+                                }
+                            );
+                        }
                         if rand::random_bool(0.04){
                             girls.push(
-                                Girl { x: i, y: j, rot: rand::random_range(0..8), col: rand::random_bool(0.5), mode:GirlModes::Idle, cooldown:1.0,destination:vec![0,0]}
+                                Girl { x: i, y: j, rot: rand::random_range(0..8), col: rand::random_bool(0.5), mode:GirlModes::Idle, cooldown:1.0,destination:vec![0,0], money:100}
                             );
                             occupiedtiles.push(vec![i,j]);
                         }
@@ -259,8 +280,7 @@ fn main(){
     let mut progress3= false;
     let mut progress4= false;
 
-    let mut month = 1;
-    //rand::random_range(0..13) ;
+    let mut month = rand::random_range(0..13) ;
     let months = vec![
         "January",
         "February",
@@ -367,7 +387,9 @@ fn main(){
                 });
             }
         }
+        let prevgirl =girls.clone();
         for girl in &mut girls{
+            
             if girl.mode ==GirlModes::Work{
                 girl.mode=GirlModes::Idle;
             }
@@ -455,6 +477,7 @@ fn main(){
             }
             
             
+            
             //girl move
             if rand::random_bool(0.01){
                 let oldpos = vec![girl.x, girl.y];
@@ -516,6 +539,12 @@ fn main(){
             }
         }
 
+        for girl in 0..girls.len(){
+            if prevgirl[girl].mode == GirlModes::Work && girls[girl].mode == GirlModes::Idle{
+                girls[girl].money += 3;
+                res_monies -= 3;
+            }
+        }
 
         //girl speak 2 eachother on collision
         let gnum = girls.len();
@@ -593,7 +622,7 @@ fn main(){
 
         for y in 0..50{
             for x in 0..50{
-                d.draw_rectangle(64*x+32*y-(posx.round() as i32), 73+22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, 64, 300, bgc);
+                d.draw_rectangle(64*x+32*y-(posx.round() as i32), 73+22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, 64, 300, bgc);
             }
         }
 
@@ -609,88 +638,92 @@ fn main(){
             }
             if canyou{
                 if map[x as usize][y  as usize].tile == TileType::Grass{
-                    if rand::random_bool(0.00001){
-                        if rand::random_bool(0.5)
+                    if rand::random_bool(0.0001){
+                        if rand::random_bool(0.3)
                         {
                             map[x as usize][y  as usize].tile=TileType::Tree;
-                        }else{
+                        }else if rand::random_bool(0.5){
                             map[x as usize][y  as usize].tile=TileType::Bush;
+                        }else {
+                            map[x as usize][y  as usize].tile=TileType::Rock;
                         }
                     }
                 }}
         }
 
+        let mut hice = 0;
         for y in 0..50{
             for x in 0..50{
                 if map[x as usize][y  as usize].tile==TileType::Grass{
-                    d.draw_texture(&grass_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                    d.draw_texture(&grass_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                 } else if map[x as usize][y  as usize].tile==TileType::Road{
-                    d.draw_texture(&road_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                    d.draw_texture(&road_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                 } else if map[x as usize][y  as usize].tile==TileType::A{
                     if map[x as usize][y  as usize].progress<11{
-                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     } else{
-                        d.draw_texture(&a_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&a_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     }
                 } else if map[x as usize][y  as usize].tile==TileType::House{
                     if map[x as usize][y  as usize].progress<11{
-                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     } else{
-                        d.draw_texture(&house_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        hice+=1;
+                        d.draw_texture(&house_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     }
                 } else if map[x as usize][y  as usize].tile==TileType::Factory{
                     if map[x as usize][y  as usize].progress<11{
-                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     } else{
-                        d.draw_texture(&factory_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&factory_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     }
                 } else if map[x as usize][y  as usize].tile==TileType::Ball{
                     if map[x as usize][y  as usize].progress<11{
-                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     } else{
-                        d.draw_texture(&ball_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&ball_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     }
                 }  else if map[x as usize][y  as usize].tile==TileType::Wall{
                     if map[x as usize][y  as usize].progress<11{
-                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     } else{
-                        d.draw_texture(&wall_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&wall_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     }
                 } else if map[x as usize][y  as usize].tile==TileType::Sculpture{
                     if map[x as usize][y  as usize].progress<11{
-                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     } else{
-                        d.draw_texture(&sculpture_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                        d.draw_texture(&sculpture_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                     }
                 }   else if map[x as usize][y  as usize].tile==TileType::Bush{
-                    d.draw_texture(&bush_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                    d.draw_texture(&bush_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                 }   else if map[x as usize][y  as usize].tile==TileType::Tree{
-                    d.draw_texture(&tree_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                    d.draw_texture(&tree_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                 }   else if map[x as usize][y  as usize].tile==TileType::Rock{
-                    d.draw_texture(&rock_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                    d.draw_texture(&rock_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::new(255-(map[x as usize][y  as usize].height*13) as u8, 255-(map[x as usize][y  as usize].height*13) as u8, 255, 255)); 
                 } else if map[x as usize][y  as usize].tile==TileType::River{
                     map[x as usize][y  as usize].height = 0;
                     d.draw_texture(&river_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)+6, Color::WHITE); 
                 }  else if map[x as usize][y  as usize].tile==TileType::Bridge{
                     map[x as usize][y  as usize].height = 0;
                     d.draw_texture(&river_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)+6, Color::WHITE);
-                    d.draw_texture(&bridge_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);  
+                    d.draw_texture(&bridge_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE);  
                 } 
                 for girl in &girls{
                     if x==girl.x && y==girl.y{
                         if girl.col{
-                            d.draw_texture(&bgirl_sprite[girl.rot as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                            d.draw_texture(&bgirl_sprite[girl.rot as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE); 
                         }else{
-                            d.draw_texture(&wgirl_sprite[girl.rot as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                            d.draw_texture(&wgirl_sprite[girl.rot as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE); 
                         }
                         if girl.mode==GirlModes::Interact{
-                            d.draw_texture(&talk_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                            d.draw_texture(&talk_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE);
                         } else if girl.mode==GirlModes::Work{
-                            d.draw_texture(&work_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                            d.draw_texture(&work_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE);
                         } else if girl.mode==GirlModes::Attent{
-                            d.draw_texture(&alert_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                            d.draw_texture(&alert_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE);
                         } else if girl.mode==GirlModes::Going{
-                            d.draw_texture(&go_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                            d.draw_texture(&go_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE);
                         }
                     }
                 }
@@ -703,13 +736,13 @@ fn main(){
                 let cy = sy + 22;
 
                 let mx = d.get_mouse_x();
-                let my = d.get_mouse_y() - 51;
+                let my = d.get_mouse_y() - 51 + map[x as usize][y  as usize].height*7;
 
                 let dx = (mx - cx).abs();
                 let dy = (my - cy).abs();
 
                 if dx * 22 + dy * 32 <= 32 * 22 {
-                    d.draw_texture(&cursor,  64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                    d.draw_texture(&cursor,  64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE);
 
                     if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) && paintbrushtype==BrushType::Tile{
                         let mut canyou = true;
@@ -927,8 +960,9 @@ fn main(){
         draw_text(&mut d, &font,"road",576+27+2,540,17,Color::BLACK);
         d.draw_texture(&road_sprite ,576+27,540,Color::WHITE);
 
-
-        draw_text(&mut d, &font,&("wood: ".to_string()+&res_wood.to_string()+"\nfood: "+&res_food.to_string()+"\nstone: "+&res_stone.to_string()+"\nmonies: "+&res_monies.to_string()),110,450,20,Color::BLACK);
+        
+        draw_text(&mut d, &font,&("food: ".to_owned()+&res_food.to_string()+"\nwood: "+&res_wood.to_string()+"\nstone: "+&res_stone.to_string()+"\nmonies: "+&res_monies.to_string()),110,450,20,Color::BLACK);
+        draw_text(&mut d, &font,&("housed girls: ".to_owned()+&hice.to_string()+"/"+&girls.len().to_string()),230,450,20,Color::BLACK);
 
         draw_text(&mut d, &font,months[month], 602, 19, 25, Color::CYAN);
         draw_text(&mut d, &font,months[month], 600, 17, 25, Color::BLACK);

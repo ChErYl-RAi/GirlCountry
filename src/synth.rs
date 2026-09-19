@@ -202,7 +202,7 @@ pub fn play(month: &str) {
 
 
     let mids = Tune {
-        bpm:160.0,
+        bpm:135.0,
         tracks: 10,
         instruments: vec![
             Instruments::Sqr, // beeps
@@ -636,7 +636,7 @@ pub fn play(month: &str) {
 
     player.play();
 
-    let end = Instant::now() + Duration::from_millis((((currentmusic.song[0].len()*16) as f32 * (currentmusic.bpm/60.0/16.0)) as u64)*1000 -5);
+    let end = Instant::now() + Duration::from_millis((((currentmusic.song[0].len()*16) as f32 * (currentmusic.bpm/60.0/16.0)) as u64)*1000 -5-(elapsed.as_secs_f32() as u64));
     println!("loop");
     sleep(end - Instant::now());
     println!("deloop");
