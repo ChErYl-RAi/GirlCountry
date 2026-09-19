@@ -244,22 +244,76 @@ pub fn play(month: &str) {
 
             vec![67.0, 0.0, 61.0, 0.0, 61.0, 0.0, 58.0, 0.0, 67.0, 0.0, 61.0, 0.0, 61.0, 0.0, 58.0, 0.0], // beep 4 p2          20
             vec![61.0, 0.0, 58.0, 0.0, 55.0, 0.0, 52.0, 0.0, 61.0, 0.0, 58.0, 0.0, 55.0, 0.0, 52.0, 0.0], // Bbeep 4 p2         21
-            vec![61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0], // drn 4 p2    22 
+            vec![61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0, 61.0], // drn 4 p2   22 
 
             vec![0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0], //snare 2                     23
+
+            vec![65.0, 0.0, 60.0, 0.0, 60.0, 0.0, 56.0, 0.0, 65.0, 0.0, 60.0, 0.0, 60.0, 0.0, 56.0, 0.0], // beep 5 p2          24
+            vec![60.0, 0.0, 56.0, 0.0, 56.0, 0.0, 53.0, 0.0, 60.0, 0.0, 56.0, 0.0, 56.0, 0.0, 53.0, 0.0], // Bbeep 5 p2         25
+            vec![60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0], // drn 5 p2   26 
+
+            vec![65.0, 0.0, 62.0, 0.0, 62.0, 0.0, 59.0, 0.0, 65.0, 0.0, 62.0, 0.0, 62.0, 0.0, 59.0, 0.0], // beep 6 p2          27
+            vec![62.0, 0.0, 59.0, 0.0, 59.0, 0.0, 55.0, 0.0, 62.0, 0.0, 59.0, 0.0, 59.0, 0.0, 55.0, 0.0], // Bbeep 6 p2         28
+            vec![59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0, 59.0], // drn 6 p2   29 
+
+            vec![63.0, 0.0, 60.0, 0.0, 60.0, 0.0, 55.0, 0.0, 62.0, 0.0, 60.0, 0.0, 60.0, 0.0, 55.0, 0.0], // beep 7 p2          30
+            vec![60.0, 0.0, 55.0, 0.0, 55.0, 0.0, 51.0, 0.0, 59.0, 0.0, 55.0, 0.0, 55.0, 0.0, 50.0, 0.0], // Bbeep 7 p2         31
+            vec![60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0], // drn 7 p2   32 
+
+            vec![67.0, 0.0, 64.0, 0.0, 64.0, 0.0, 60.0, 0.0, 67.0, 0.0, 64.0, 0.0, 64.0, 0.0, 60.0, 0.0], // beep 8 p2          33
+            vec![64.0, 0.0, 60.0, 0.0, 60.0, 0.0, 55.0, 0.0, 64.0, 0.0, 58.0, 0.0, 58.0, 0.0, 55.0, 0.0], // Bbeep 8 p2         34
+            vec![64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0], // drn 8 p2   35 
+
+            vec![68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0], // BDrn 1,2    36
+            vec![67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0], // BDrn 3,4,8  37
+            vec![65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0], // BDrn 5,6    38
+            vec![63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0], // BDrn 7      39
+
+            vec![63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0, 63.0-12.0], // drone 1 p2 40
+            vec![62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0], // drn 2 p2   41
+            vec![62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0, 62.0-12.0], // drn 3 p2   42
+            vec![61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0, 61.0-12.0], // drn 4 p2   43 
+            vec![60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0], // drn 5 p2   44 
+            vec![59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0, 59.0-12.0], // drn 6 p2   45 
+            vec![60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0, 60.0-12.0], // drn 7 p2   46 
+            vec![64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0, 64.0-12.0], // drn 8 p2   47 
+
+            vec![68.0, 68.0, 68.0, 68.0, 68.0, 0.0, 68.0, 0.0, 68.0, 68.0, 68.0, 68.0, 68.0, 70.0, 67.0, 67.0], // melanie1       48 
+            vec![68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 68.0, 0.0], // melanie2      49 
+            vec![67.0, 67.0, 67.0, 67.0, 67.0, 0.0, 67.0, 0.0, 67.0, 67.0, 67.0, 67.0, 67.0, 68.0, 65.0, 65.0], // melanie3       50 
+            vec![67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 0.0], // melanie4      51 
+            vec![65.0, 65.0, 65.0, 65.0, 65.0, 0.0, 65.0, 0.0, 65.0, 65.0, 65.0, 65.0, 65.0, 67.0, 63.0, 63.0], // melanie5       52 
+            vec![65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 63.0, 63.0, 63.0, 63.0, 62.0, 62.0, 62.0, 62.0], // melanie6     53 
+            vec![63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 63.0, 65.0, 65.0, 65.0, 65.0], // melanie7     54 
+            vec![67.0, 67.0, 67.0, 67.0, 64.0, 64.0, 64.0, 64.0, 65.0, 65.0, 65.0, 65.0, 67.0, 67.0, 67.0, 67.0], // melanie8     55 
+
+            vec![70.0, 70.0, 70.0, 70.0, 70.0, 0.0, 70.0, 0.0, 68.0, 68.0, 68.0, 68.0, 68.0, 70.0, 68.0, 68.0], // melanie2      56
+            vec![67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0, 67.0], // melanie3      57
+
+            vec![67.0, 67.0, 67.0, 67.0, 67.0, 0.0, 67.0, 0.0, 65.0, 65.0, 65.0, 65.0, 65.0, 67.0, 65.0, 65.0], // melanie2      58
+            vec![64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0], // melanie3      59
+
+            vec![65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 60.0, 60.0, 60.0, 60.0], // melanie       60
+            vec![63.0, 63.0, 63.0, 63.0, 62.0, 62.0, 62.0, 62.0, 60.0, 60.0, 60.0, 60.0, 62.0, 62.0, 62.0, 62.0], // melanie       61
+            vec![62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 62.0, 60.0, 60.0, 60.0, 0.0], // melanie       62
+            vec![60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0], // melanie       63
+
+            vec![55.0, 55.0, 55.0, 55.0, 55.0, 55.0, 55.0, 55.0, 55.0, 55.0, 55.0, 55.0, 53.0, 53.0, 53.0, 0.0], // melanie       64
+            vec![52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0], // melanie       65
+            
         ],
 
 
         song: vec![
-            vec![3, 3, 3, 3, 3, 3, 3, 3, 11,14,17,20], // beeps
-            vec![4, 4, 4, 4, 4, 4, 4, 4, 12,15,18,21], // beeps
-            vec![9, 9, 9, 9, 9, 9, 9, 9, 13,16,19,22], // drone
-            vec![5, 6, 7, 8, 5, 6, 7, 10,0, 0, 0, 0,], // melody
-            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,], // melody
-            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,], // drone 2
-            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,], // beep
-            vec![2, 23,2, 23,2, 23,2, 23,2, 23,2, 23], // snare
-            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // bassdrum
+            vec![3, 3, 3, 3, 3, 3, 3, 3, 11,14,17,20,24,27,30,33,11,14,17,20,24,27,30,33], // beeps
+            vec![4, 4, 4, 4, 4, 4, 4, 4, 12,15,18,21,25,28,31,34,12,15,18,21,25,28,31,34], // beeps
+            vec![9, 9, 9, 9, 9, 9, 9, 9, 13,16,19,22,26,29,32,35,13,16,19,22,26,29,32,35], // drone
+            vec![5, 6, 7, 8, 5, 6, 7, 10,48,49,50,51,52,53,54,55,48,49,56,57,60,61,62,63], // melody
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58,59, 0, 0,64,65], // melody
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 36,36,37,37,38,38,39,37,36,36,37,37,38,38,39,37], // drone 2
+            vec![0, 0, 0, 0, 0, 0, 0, 0, 40,41,42,43,44,45,46,47,40,41,42,43,44,45,46,47], // beep
+            vec![2, 23,2, 23,2, 23,2, 23,2, 23,2, 23,2, 23,2, 23,2, 23,2, 23,2, 23,2, 23], // snare
+            vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // bassdrum
         ],
 
         volumes: vec![
@@ -293,6 +347,61 @@ pub fn play(month: &str) {
             vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
 
             vec![0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0], //snare 2                     23
+
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+
+
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+
+
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie1       48 
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0], // melanie2      49 
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie3       50 
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0], // melanie4      51 
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie5       52 
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie6     53 
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie7     54 
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie8     55 
+
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie2      56
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie3      57
+
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie2      58
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], // melanie3      59
+
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0],
+            vec![1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
         ],
 
         types: vec![
@@ -326,6 +435,58 @@ pub fn play(month: &str) {
 
             vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout], // PART A BEEPS
             
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout, Types::Fadeout],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+            vec![Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal, Types::Normal],
+
         ]
 
     };

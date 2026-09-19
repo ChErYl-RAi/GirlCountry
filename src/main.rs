@@ -20,6 +20,7 @@ enum TileType {
     Bush,
     Wall,
     Sculpture,
+    Road,
 }
 
 
@@ -37,7 +38,7 @@ struct Tile{
     progress:i32,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq,Clone)]
 enum GirlModes{
     Idle,
     Going,
@@ -46,6 +47,7 @@ enum GirlModes{
     Attent,
 }
 
+#[derive(Clone)]
 struct Girl{
     x:i32,
     y:i32,
@@ -78,8 +80,16 @@ fn main(){
     let wall_sprite = rl.load_texture(&thread, "assets/wall.png").unwrap();
     let sculpture_sprite = rl.load_texture(&thread, "assets/sculpture.png").unwrap();
     let rock_sprite = rl.load_texture(&thread, "assets/stone.png").unwrap();
+    let alert_sprite = rl.load_texture(&thread, "assets/alert.png").unwrap();
+    let go_sprite = rl.load_texture(&thread, "assets/mitawa.png").unwrap();
+    let road_sprite = rl.load_texture(&thread, "assets/path.png").unwrap();
 
-
+    let font = [
+        rl.load_font_ex(&thread, "assets/ipam.ttf", 17, None).unwrap(),
+        rl.load_font_ex(&thread, "assets/ipam.ttf", 20, None).unwrap(),
+        rl.load_font_ex(&thread, "assets/ipam.ttf", 25, None).unwrap(),
+        rl.load_font_ex(&thread, "assets/ipam.ttf", 50, None).unwrap()];
+    // 17 20 25 50
     
     let message = "";
 
@@ -249,7 +259,7 @@ fn main(){
     let mut progress3= false;
     let mut progress4= false;
 
-    let mut month = 5;
+    let mut month = 1;
     //rand::random_range(0..13) ;
     let months = vec![
         "January",
@@ -414,11 +424,10 @@ fn main(){
                 girp.cooldown=0.0
             }
         }
-        
         for girl in &mut girls{
             if girl.mode == GirlModes::Going{
                 if girl.cooldown <= 0.0{
-                    let dest= jumpies::find(girl.x,girl.y,girl.destination[0],girl.destination[1]);
+                    let dest= jumpies::find(girl.x,girl.y,girl.destination[0],girl.destination[1],&map);
                     girl.x= dest[0];
                     girl.y= dest[1];
                     if girl.x == girl.destination[0] && girl.y == girl.destination[1] {
@@ -615,6 +624,8 @@ fn main(){
             for x in 0..50{
                 if map[x as usize][y  as usize].tile==TileType::Grass{
                     d.draw_texture(&grass_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
+                } else if map[x as usize][y  as usize].tile==TileType::Road{
+                    d.draw_texture(&road_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
                 } else if map[x as usize][y  as usize].tile==TileType::A{
                     if map[x as usize][y  as usize].progress<11{
                         d.draw_texture(&building_sprite[map[x as usize][y  as usize].progress as usize], 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE); 
@@ -676,6 +687,10 @@ fn main(){
                             d.draw_texture(&talk_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
                         } else if girl.mode==GirlModes::Work{
                             d.draw_texture(&work_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                        } else if girl.mode==GirlModes::Attent{
+                            d.draw_texture(&alert_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
+                        } else if girl.mode==GirlModes::Going{
+                            d.draw_texture(&go_sprite, 64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*12, Color::WHITE);
                         }
                     }
                 }
@@ -725,7 +740,7 @@ fn main(){
                                     let _beep = thread::spawn(|| {
                                         synth::beep();
                                     });
-                                    if map[x as usize][y as usize].tile == TileType::Grass || map[x as usize][y as usize].tile == TileType::Bridge || map[x as usize][y as usize].tile == TileType::River{
+                                    if map[x as usize][y as usize].tile == TileType::Grass || map[x as usize][y as usize].tile == TileType::Bridge || map[x as usize][y as usize].tile == TileType::River || map[x as usize][y as usize].tile == TileType::Road{
                                         map[x as usize][y as usize].progress = 12;
                                     } else {
                                         map[x as usize][y as usize].progress = 0;
@@ -794,6 +809,9 @@ fn main(){
                                 canyou=false;
                             }
                         }
+                        if map[x as usize][y as usize].tile != TileType::Grass && map[x as usize][y as usize].tile != TileType::Bridge{
+                            canyou=false;
+                        } 
 
                         if canyou{
                             for girl in &mut girls{
@@ -824,19 +842,19 @@ fn main(){
         
         d.draw_rectangle(0, 0, 768, 60, Color::LIGHTBLUE);
         d.draw_rectangle(0, 420, 768, 220, Color::LIGHTBLUE);
-        //d.draw_text("GirlCountry", 5, 5, 50, Color::WHITE);
+        //draw_text(&mut d, &font,"GirlCountry", 5, 5, 50, Color::WHITE);
         
         if paintbrushtype == BrushType::Rise{
             d.draw_rectangle(0, 470, 80, 24, Color::YELLOW);
         }
         d.draw_rectangle_lines(0, 470, 80, 24, Color::BLACK);
-        d.draw_text("elevate",2,472,20,Color::BLACK);
+        draw_text(&mut d, &font,"elevate",2,472,20,Color::BLACK);
 
         if paintbrushtype == BrushType::Depress{
             d.draw_rectangle(0, 500, 90, 24, Color::YELLOW);
         }
         d.draw_rectangle_lines(0, 500, 90, 24, Color::BLACK);
-        d.draw_text("depress",2,502,20,Color::BLACK);
+        draw_text(&mut d, &font,"depress",2,502,20,Color::BLACK);
 
         if paintbrushtype != BrushType::Girl{
             if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) 
@@ -868,9 +886,10 @@ fn main(){
             TileType::Bridge,
             TileType::Sculpture,
             TileType::Wall,
+            TileType::Road,
         ];
 
-        for i in 0..9{
+        for i in 0..10{
             if paintbrush == tmptypearr[i as usize] && paintbrushtype==BrushType::Tile{
                 d.draw_rectangle(67*i, 540, 64, 96, Color::YELLOW);
             }
@@ -887,61 +906,60 @@ fn main(){
                 }
             }
         }
-        d.draw_text("grass",2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"grass",2,540,17,Color::BLACK);
         d.draw_texture(&grass_sprite,0,540,Color::WHITE);
-        d.draw_text("factory",64+3+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"factory",64+3+2,540,17,Color::BLACK);
         d.draw_texture(&factory_sprite ,64+3,540,Color::WHITE);
-        d.draw_text(" \"a\"",128+6+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font," \"a\"",128+6+2,540,17,Color::BLACK);
         d.draw_texture(&a_sprite,128+6,540,Color::WHITE);
-        d.draw_text("house",192+9+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"house",192+9+2,540,17,Color::BLACK);
         d.draw_texture(&house_sprite ,192+9,540,Color::WHITE);
-        d.draw_text("ball",256+12+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"ball",256+12+2,540,17,Color::BLACK);
         d.draw_texture(&ball_sprite ,256+12,540,Color::WHITE);
-        d.draw_text("water",320+15+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"water",320+15+2,540,17,Color::BLACK);
         d.draw_texture(&river_sprite ,320+15,540,Color::WHITE);
-        d.draw_text("bridge",384+18+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"bridge",384+18+2,540,17,Color::BLACK);
         d.draw_texture(&bridge_sprite ,384+17,540,Color::WHITE);
-        d.draw_text("ornment",448+21+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"ornment",448+21+2,540,17,Color::BLACK);
         d.draw_texture(&sculpture_sprite ,448+21,540,Color::WHITE);
-        d.draw_text("wall",512+24+2,540,17,Color::BLACK);
+        draw_text(&mut d, &font,"wall",512+24+2,540,17,Color::BLACK);
         d.draw_texture(&wall_sprite ,512+24,540,Color::WHITE);
+        draw_text(&mut d, &font,"road",576+27+2,540,17,Color::BLACK);
+        d.draw_texture(&road_sprite ,576+27,540,Color::WHITE);
 
 
-        d.draw_text(&("wood: ".to_string()+&res_wood.to_string()+"\nfood: "+&res_food.to_string()+"\nstone: "+&res_stone.to_string()+"\nmonies: "+&res_monies.to_string()),110,450,20,Color::BLACK);
+        draw_text(&mut d, &font,&("wood: ".to_string()+&res_wood.to_string()+"\nfood: "+&res_food.to_string()+"\nstone: "+&res_stone.to_string()+"\nmonies: "+&res_monies.to_string()),110,450,20,Color::BLACK);
 
-        d.draw_text(months[month], 602, 19, 25, Color::CYAN);
-        d.draw_text(months[month], 600, 17, 25, Color::BLACK);
+        draw_text(&mut d, &font,months[month], 602, 19, 25, Color::CYAN);
+        draw_text(&mut d, &font,months[month], 600, 17, 25, Color::BLACK);
 
-        d.draw_text("GirlCountry", 5, 5, 50, Color::BLACK);
-        //draw_border_text(d, "GirlCountry",50,5,5);
+        //draw_text(&mut d, &font,"GirlCountry", 5, 5, 50, Color::BLACK);
+        draw_border_text(&mut d, &font, "GirlCountry",50,5,5);
 
 
-        //d.draw_text(&(posx.to_string()+" : "+&posy.to_string()).to_string(),5,5,20, Color::WHITE)
+        //draw_text(&mut d, &font,&(posx.to_string()+" : "+&posy.to_string()).to_string(),5,5,20, Color::WHITE)
     }
 }
 
 
-fn draw_border_text(mut d:RaylibDrawHandle<'_>, txt:&str, size:i32, x:i32, y:i32){
-    d.draw_text(&txt, x-1, y, size, Color::BLACK);
-    d.draw_text(&txt, x+1, y, size, Color::BLACK);
-    d.draw_text(&txt, x, y-1, size, Color::BLACK);
-    d.draw_text(&txt, x, y+1, size, Color::BLACK);
-    d.draw_text(&txt, x-2, y, size, Color::BLACK);
-    d.draw_text(&txt, x+2, y, size, Color::BLACK);
-    d.draw_text(&txt, x, y-2, size, Color::BLACK);
-    d.draw_text(&txt, x, y+2, size, Color::BLACK);
-
-    d.draw_text(&txt, x-1, y-1, size, Color::BLACK);
-    d.draw_text(&txt, x-1, y+1, size, Color::BLACK);
-    d.draw_text(&txt, x+1, y-1, size, Color::BLACK);
-    d.draw_text(&txt, x+1, y+1, size, Color::BLACK);
-
-    d.draw_text(&txt, x-2, y-2, size, Color::BLACK);
-    d.draw_text(&txt, x-2, y+2, size, Color::BLACK);
-    d.draw_text(&txt, x+2, y-2, size, Color::BLACK);
-    d.draw_text(&txt, x+2, y+2, size, Color::BLACK);
-
-    d.draw_text(&txt, x, y, size, Color::WHITE);
+fn draw_border_text(mut b:&mut RaylibDrawHandle<'_>, font: &[Font;4], txt:&str, size:i32, x:i32, y:i32){
+    draw_text(&mut b, &font, &txt, x-1, y, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x+1, y, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x, y-1, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x, y+1, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x-2, y, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x+2, y, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x, y-2, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x, y+2, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x-1, y-1, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x-1, y+1, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x+1, y-1, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x+1, y+1, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x-2, y-2, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x-2, y+2, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x+2, y-2, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x+2, y+2, size, Color::BLACK);
+    draw_text(&mut b, &font, &txt, x, y, size, Color::WHITE);
 }
 
 
@@ -977,6 +995,9 @@ fn calculate_resources(tiletype:TileType) -> (i32,i32,i32) { //wood food stone
     }  else if tiletype == TileType::Rock 
     {
         return (0,0,2);
+    } else if tiletype == TileType::Road 
+    {
+        return (0,1,0);
     } else
     {
         return (0,0,0);
@@ -985,3 +1006,21 @@ fn calculate_resources(tiletype:TileType) -> (i32,i32,i32) { //wood food stone
 
     
 }
+
+
+fn draw_text(b:&mut RaylibDrawHandle<'_>, fonts: &[Font;4], txt: &str, x:i32,y:i32,size:i32,color:Color){
+    // 17 20 25 50
+    let mut font = &fonts[0];
+    if size == 17{
+        font = &fonts[0];
+    } else if size == 20{
+        font = &fonts[1];
+    } else if size == 25{
+        font = &fonts[2];
+    } else if size == 50{
+        font = &fonts[3];
+    }
+    b.draw_text_ex(font, txt, raylib::prelude::Vector2::new(x as f32, y as f32), size as f32, 0.0, color);
+}
+
+//("depress",2,502,20,Color::BLACK);
