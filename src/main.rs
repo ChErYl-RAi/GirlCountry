@@ -66,6 +66,8 @@ fn main(){
         .title("GirlCountry")
         .build();
     rl.set_target_fps(60);
+
+    
     let grass_sprite = rl.load_texture(&thread, "assets/grass.png").unwrap();
     let a_sprite = rl.load_texture(&thread, "assets/a.png").unwrap();
     let factory_sprite = rl.load_texture(&thread, "assets/factory.png").unwrap();
@@ -92,7 +94,8 @@ fn main(){
         rl.load_font_ex(&thread, "assets/ipam.ttf", 50, None).unwrap()];
     // 17 20 25 50
     
-    let message = "";
+    let mut msgbox = 200;
+    let mut message = "test";
 
     let mut girls:Vec<Girl>= vec![];
 
@@ -728,7 +731,7 @@ fn main(){
                     }
                 }
 
-            if d.get_mouse_y() > 60 && d.get_mouse_y() < 420{
+            if d.get_mouse_y() > 60 && d.get_mouse_y() < 420 && !(d.get_mouse_x() > 568+msgbox && d.get_mouse_y() < 160){
                 let sx = 64*x + 32*y - posx.round() as i32;
                 let sy = 22*y - posy.round() as i32;
 
@@ -842,7 +845,7 @@ fn main(){
                                 canyou=false;
                             }
                         }
-                        if map[x as usize][y as usize].tile != TileType::Grass && map[x as usize][y as usize].tile != TileType::Bridge{
+                        if map[x as usize][y as usize].tile != TileType::Grass && map[x as usize][y as usize].tile != TileType::Bridge && map[x as usize][y as usize].tile != TileType::Road{
                             canyou=false;
                         } 
 
@@ -871,8 +874,21 @@ fn main(){
             }
         }
         
+        if message != "" {
+            if msgbox>0{
+                msgbox-=2;
+            }
+        } else {
+            if msgbox<200{
+                msgbox+=2;
+            }
+        }
         
-        
+        d.draw_rectangle(568+msgbox, 60, 200, 100, Color::WHEAT);
+        if msgbox==0{
+            draw_text(&mut d, &font, message, 568, 60, 20, Color::BLACK);
+            draw_text(&mut d, &font, "n>", 738, 140, 20, Color::BLACK);
+        }
         d.draw_rectangle(0, 0, 768, 60, Color::LIGHTBLUE);
         d.draw_rectangle(0, 420, 768, 220, Color::LIGHTBLUE);
         //draw_text(&mut d, &font,"GirlCountry", 5, 5, 50, Color::WHITE);
@@ -1022,13 +1038,13 @@ fn calculate_resources(tiletype:TileType) -> (i32,i32,i32) { //wood food stone
         return (3,0,3);
     }  else if tiletype == TileType::Tree 
     {
-        return (2,0,0);
+        return (10,0,0);
     }  else if tiletype == TileType::Bush
     {
-        return (0,2,0);
+        return (0,10,0);
     }  else if tiletype == TileType::Rock 
     {
-        return (0,0,2);
+        return (0,0,10);
     } else if tiletype == TileType::Road 
     {
         return (0,1,0);

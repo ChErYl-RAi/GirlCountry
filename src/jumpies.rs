@@ -44,7 +44,7 @@ pub fn find(xpos: i32, ypos: i32, xdir: i32, ydir: i32, map:&Vec<Vec<Tile>>) -> 
     if path.len() < 2 {
         return vec![xpos, ypos];
     }
-    if kpk >999{
+    if kpk >999999{
         return vec![xpos, ypos];
     } else{
         return vec![path[1].0, path[1].1]
