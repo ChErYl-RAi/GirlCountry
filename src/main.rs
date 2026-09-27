@@ -95,7 +95,18 @@ fn main(){
     // 17 20 25 50
     
     let mut msgbox = 200;
-    let mut message = "test";
+    let messages = vec![
+        "Welcome to\nGirlCountry. This\nMessage aims to\nexplain how to play.",
+        "You have no goal,\nyou only have to\nbuild a city.",
+        "There are, however,\nlimitations.",
+        "You need resources\nand money.",
+        "If you get into \n>1000c debt, you\nlose.",
+        "Your first task is\nto make one house\nper person",
+        "Good luck!",
+        ""
+    ];
+    let mut msgnum = 0;
+    let mut message = messages[msgnum];
 
     let mut girls:Vec<Girl>= vec![];
 
@@ -395,6 +406,13 @@ fn main(){
             
             if girl.mode ==GirlModes::Work{
                 girl.mode=GirlModes::Idle;
+            }
+        }
+
+        if d.is_key_pressed(KeyboardKey::KEY_N){
+            if message!=""{
+                msgnum+=1;
+                message=messages[msgnum];
             }
         }
 
