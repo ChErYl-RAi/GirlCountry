@@ -1,5 +1,5 @@
-use noise::{Perlin, Vector2, core::perlin::perlin_2d, permutationtable::PermutationTable};
-use raylib::{ffi::{CSSPalette, RaylibPalette}, prelude::*};
+use noise::{Vector2, core::perlin::perlin_2d, permutationtable::PermutationTable};
+use raylib::{prelude::*};
 use rand;
 use std::{i32, thread};
 
@@ -67,6 +67,8 @@ fn main(){
         .build();
     rl.set_target_fps(60);
 
+    let ico = Image::load_image("assets/ico.png").unwrap();
+    rl.set_window_icon(ico);
     
     let grass_sprite = rl.load_texture(&thread, "assets/grass.png").unwrap();
     let a_sprite = rl.load_texture(&thread, "assets/a.png").unwrap();
@@ -101,8 +103,13 @@ fn main(){
         "There are, however,\nlimitations.",
         "You need resources\nand money.",
         "If you get into \n>1000c debt, you\nlose.",
-        "Your first task is\nto make one house\nper person",
+        "Your first task is\nto make one HOUSE\nper person",
         "Good luck!",
+        "",
+        "Congratulations!!!\nYou did it.",
+        "However!\nYou may notice your\nmonies have shrunk.",
+        "Your next task is\nto build FACTORIES",
+        "In these, people get\ntheir own monies,\nwhich will return\nto you each month.",
         ""
     ];
     let mut msgnum = 0;
@@ -147,10 +154,10 @@ fn main(){
         rl.load_texture(&thread, "assets/building11.png").unwrap(),
     ];
 
-    let mut res_wood =  10;
-    let mut res_food =  10;
-    let mut res_stone = 10;
-    let mut res_monies = 50;
+    let mut res_wood =  100;
+    let mut res_food =  100;
+    let mut res_stone = 100;
+    let mut res_monies = 1000;
 
     let mut bellring = false;
 
@@ -250,7 +257,7 @@ fn main(){
                                 }
                             );
                         }
-                        if rand::random_bool(0.04){
+                        if rand::random_bool(0.02){
                             girls.push(
                                 Girl { x: i, y: j, rot: rand::random_range(0..8), col: rand::random_bool(0.5), mode:GirlModes::Idle, cooldown:1.0,destination:vec![0,0], money:100}
                             );
@@ -289,10 +296,10 @@ fn main(){
     let mut bbuildtimer=0.0;
     let mut cbuildtimer=0.0;
     let mut dbuildtimer=0.0;
-    let mut progress1= false;
-    let mut progress2= false;
-    let mut progress3= false;
-    let mut progress4= false;
+    let mut progress1;
+    let mut progress2;
+    let mut progress3;
+    let mut progress4;
 
     let mut month = rand::random_range(0..13) ;
     let months = vec![
@@ -387,6 +394,10 @@ fn main(){
             bells =thread::spawn(move || {
                 synth::bells();
             });
+            for gip in &mut girls{
+                res_monies+=(gip.money as f32*0.05) as i32;
+                gip.money = (gip.money as f32 * 0.95) as i32;
+            }
             month+=1;
             if month ==13 { month =0; } ;
             bellring=true;
@@ -567,6 +578,8 @@ fn main(){
             }
         }
 
+
+        
         //girl speak 2 eachother on collision
         let gnum = girls.len();
         for girl_a in 0..gnum{
@@ -749,6 +762,21 @@ fn main(){
                     }
                 }
 
+
+            
+            if hice>=girls.len(){
+                if msgnum<7{
+                    msgnum=7;
+                }
+                if msgnum==7{
+                    msgnum+=1;
+                    let _beep = thread::spawn(|| {
+                        synth::tada();
+                    });
+                }
+            }
+
+
             if d.get_mouse_y() > 60 && d.get_mouse_y() < 420 && !(d.get_mouse_x() > 568+msgbox && d.get_mouse_y() < 160){
                 let sx = 64*x + 32*y - posx.round() as i32;
                 let sy = 22*y - posy.round() as i32;
@@ -776,7 +804,7 @@ fn main(){
 
                         if canyou{
                             if map[x as usize][y as usize].tile==TileType::Grass || map[x as usize][y as usize].tile==TileType::River || map[x as usize][y as usize].tile==TileType::Bridge{
-                                let mut tmp_res = (0,0,0);
+                                let tmp_res: (i32, i32, i32);
 
                                 tmp_res = calculate_resources(paintbrush); //wood food stone
                                 res_wood-=tmp_res.0;
@@ -815,7 +843,7 @@ fn main(){
 
                         if canyou{
                             if ! (map[x as usize][y as usize].tile==TileType::Grass || map[x as usize][y as usize].tile==TileType::River || map[x as usize][y as usize].tile==TileType::Bridge){
-                                let mut tmp_res = (0,0,0);
+                                let tmp_res: (i32, i32, i32);
                                 tmp_res = calculate_resources(map[x as usize][y as usize].tile); //wood food stone
                                 res_wood+=tmp_res.0;
                                 res_food+=tmp_res.1;
@@ -891,6 +919,7 @@ fn main(){
 
             }
         }
+
         
         if message != "" {
             if msgbox>0{

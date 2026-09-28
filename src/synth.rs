@@ -1,6 +1,6 @@
-use std::{num::{NonZeroU16, NonZeroU32}, thread::sleep, time::{Duration, Instant}};
+use std::{num::{NonZeroU16, NonZeroU32}, thread::sleep, time::{Duration}};
 
-use rodio::{Source, mixer::mixer, source::{self, Pink, SawtoothWave, SineWave, SquareWave, WhiteUniform, noise::Brownian}};
+use rodio::{Source, mixer::mixer, source::{SawtoothWave, SineWave, SquareWave, WhiteUniform, noise::Brownian}};
 
 struct Tune {
     bpm:f32,
@@ -505,7 +505,7 @@ pub fn play(month: &str) {
     let player = rodio::Player::connect_new(&handle.mixer());
     let sample_rate = NonZeroU32::new(48000).unwrap();
 
-    for asdfasdf in 0..3 {
+    for _asdfasdf in 0..5 {
     let mut songpos = 0;
     // Add a dummy source of the sake of the example.
     use std::time::Instant;
@@ -517,7 +517,7 @@ pub fn play(month: &str) {
     println!("{},{},{}", currentmusic.bpm, currentmusic.bpm/60.0/16.0,  currentmusic.bpm/60.0/16.0);
 
     
-    for song in 0..(currentmusic.song[0].len()*currentmusic.patterns[0].len()) {
+    for _song in 0..(currentmusic.song[0].len()*currentmusic.patterns[0].len()) {
         let sawmix = mixer(NonZeroU16::new(1).unwrap(), sample_rate);
         let pattpos=songpos%currentmusic.patterns[0].len();
         let fullpos: usize= ((songpos/currentmusic.patterns[0].len()) as f32).floor() as usize;
