@@ -540,36 +540,36 @@ pub fn play(month: &str) {
                 } else if currentmusic.instruments[channel.0] == Instruments::Sine {
 
                     if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Normal {
-                    let source = SineWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]);
+                    let source = SineWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]);
                     sawmix.0.add(source);
                     } else if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Fadein {
-                    let source = SineWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_in(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
+                    let source = SineWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_in(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
                     sawmix.0.add(source);                    
                     } else if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Fadeout {
-                    let source = SineWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
+                    let source = SineWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
                     sawmix.0.add(source);
                     }
                     
                 } else if currentmusic.instruments[channel.0] == Instruments::Puresaw {
                     if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Normal {
-                    let source = SawtoothWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]);
+                    let source = SawtoothWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]);
                     sawmix.0.add(source);
                     } else if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Fadein {
-                    let source = SawtoothWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_in(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
+                    let source = SawtoothWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_in(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
                     sawmix.0.add(source);
                     } else if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Fadeout {
-                    let source = SawtoothWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
+                    let source = SawtoothWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
                     sawmix.0.add(source);
                     }
                 } else if currentmusic.instruments[channel.0] == Instruments::Puresqr {
                     if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Normal {
-                    let source = SquareWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]);
+                    let source = SquareWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]);
                     sawmix.0.add(source);
                     } else if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Fadein {
-                    let source = SquareWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_in(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
+                    let source = SquareWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_in(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
                     sawmix.0.add(source);
                     } else if currentmusic.types[currentmusic.song[channel.0][fullpos] as usize][pattpos] == Types::Fadeout {
-                    let source = SquareWave::new((440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 ) )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
+                    let source = SquareWave::new(440.0*(2.0 as f32).powf( (currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] - 69.0)/12.0 )).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (1.0 / (currentmusic.instruments.len() as f32)) * 0.70*currentmusic.volumes[currentmusic.song[channel.0][fullpos] as usize][pattpos]).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
                     sawmix.0.add(source);
                     }
                 } else if currentmusic.instruments[channel.0] == Instruments::Sqr {
@@ -613,7 +613,7 @@ pub fn play(month: &str) {
                 }
 
                 if currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] < 30.0 && currentmusic.patterns[currentmusic.song[channel.0][fullpos] as usize][pattpos] > 5.0 {
-                    let source = Brownian::new(sample_rate).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( (2.0 / (currentmusic.instruments.len() as f32))).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
+                    let source = Brownian::new(sample_rate).take_duration(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) ).amplify( 2.0 / (currentmusic.instruments.len() as f32)).fade_out(Duration::from_secs_f32(( currentmusic.bpm/60.0/16.0) as f32) );
                     sawmix.0.add(source);
                 }
             }

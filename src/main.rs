@@ -436,16 +436,16 @@ fn main(){
                         girl.mode=GirlModes::Work;
                     }
                     if map[x as usize][y as usize].progress<12 && girl.mode==GirlModes::Work{
-                        if (x-1 == girl.x && y == girl.y-1){
+                        if x-1 == girl.x && y == girl.y-1 {
                             girl.rot=4;
                         }
-                        else if (x+1 == girl.x && y == girl.y+1){
+                        else if x+1 == girl.x && y == girl.y+1 {
                             girl.rot=0;
                         }
-                        else if (x == girl.x && y-1 == girl.y){
+                        else if x == girl.x && y-1 == girl.y {
                             girl.rot=2;
                         }
-                        else if (x == girl.x && y+1 == girl.y){
+                        else if x == girl.x && y+1 == girl.y {
                             girl.rot=6;
                         }
                     }
