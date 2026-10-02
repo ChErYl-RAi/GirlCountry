@@ -716,19 +716,19 @@ pub fn tada() {
     let sawmix = mixer(NonZeroU16::new(1).unwrap(), NonZeroU32::new(48000).unwrap());
 
     for i in 0..5{
-        let source = SineWave::new(130.81 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(0.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(0.2));
+        let source = SineWave::new(130.81 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(1.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(1.2));
         sawmix.0.add(source);
     }
     for i in 0..5{
-        let source = SineWave::new(329.63 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(0.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(0.2));
+        let source = SineWave::new(329.63 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(1.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(1.2));
         sawmix.0.add(source);
     }
     for i in 0..5{
-        let source = SineWave::new(392.0 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(0.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(0.2));
+        let source = SineWave::new(392.0 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(1.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(1.2));
         sawmix.0.add(source);
     }
     for i in 0..5{
-        let source = SineWave::new(493.88 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(0.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(0.2));
+        let source = SineWave::new(493.88 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(1.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(1.2));
         sawmix.0.add(source);
     }
     player.append(sawmix.1);

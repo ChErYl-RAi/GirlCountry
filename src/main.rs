@@ -5,6 +5,7 @@ use std::{i32, thread};
 
 mod synth;
 mod jumpies;
+mod imagegen;
 
 #[derive(PartialEq, Clone, Copy)]
 enum TileType {
@@ -32,6 +33,7 @@ enum BrushType {
     Girl,
 }
 
+#[derive(PartialEq,Clone)]
 struct Tile{
     tile:TileType,
     height:i32,
@@ -60,7 +62,6 @@ struct Girl{
 }
 
 fn main(){
-
     let (mut rl, thread) = raylib::init()
         .size(768, 640)
         .title("GirlCountry")
@@ -165,7 +166,7 @@ fn main(){
         synth::mynothing();
     });
     
-    let mut posx: f32 = rand::random_range(400..3600) as f32;
+    let mut posx: f32 = rand::random_range(0..4000) as f32;
     let mut posy: f32 = rand::random_range(-30..770) as f32;
     let mut map: Vec<Vec<Tile>> = vec![];
     let mut occupiedtiles: Vec<Vec<i32>> = vec![];
@@ -325,6 +326,7 @@ fn main(){
         synth::play(mus1[mxs1]);
     });
 
+
     while !rl.window_should_close() {
         let mut d = rl.begin_drawing(&thread);
         d.clear_background(sky);
@@ -349,6 +351,14 @@ fn main(){
             if posx<4000.0{
                 posx+=252.0*d.get_frame_time();
             }
+        }
+        while posx<posy
+        {
+            posx+=1.0;
+        }
+        while posx>posy+3250.0
+        {
+            posx-=1.0;
         }
         
         abuildtimer+=2.0*d.get_frame_time();
@@ -426,6 +436,8 @@ fn main(){
                 message=messages[msgnum];
             }
         }
+
+        
 
         for y in 0..50{
             for x in 0..50{
@@ -656,7 +668,7 @@ fn main(){
 
         for y in 0..50{
             for x in 0..50{
-                d.draw_rectangle(64*x+32*y-(posx.round() as i32), 73+22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, 64, 300, bgc);
+                d.draw_rectangle(64*x+32*y-(posx.round() as i32), 73+22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, 64, 1100, bgc);
             }
         }
 
@@ -1035,6 +1047,55 @@ fn main(){
 
 
         //draw_text(&mut d, &font,&(posx.to_string()+" : "+&posy.to_string()).to_string(),5,5,20, Color::WHITE)
+
+        if res_monies>32767{
+            res_monies=32767;
+        }
+        if res_monies< -32767{
+            res_monies=-32767;
+        }
+        if res_food>65534{
+            res_monies=65534;
+        }
+        if res_wood>65534{
+            res_monies=65534;
+        }
+        if res_stone>65534{
+            res_monies=65534;
+        }
+
+        if d.is_key_pressed(KeyboardKey::KEY_I) && d.is_key_down(KeyboardKey::KEY_LEFT_CONTROL) {
+            imagegen::makeimg(&map, &girls);
+        }
+        if d.is_key_pressed(KeyboardKey::KEY_S) && d.is_key_down(KeyboardKey::KEY_LEFT_CONTROL) {
+            let mut save: Vec<u8> = vec![];
+            save.push(month as u8);
+            save.push(msgnum as u8);
+            save.push(((res_monies+32767)/255)as u8);
+            save.push(((res_monies+32767)%255)as u8);
+            save.push((res_food/255) as u8);
+            save.push((res_food%255) as u8);
+            save.push((res_wood/255) as u8);
+            save.push((res_wood%255) as u8);
+            save.push((res_stone/255) as u8);
+            save.push((res_stone%255) as u8);
+            for y in 0..50{
+                for x in 0..50{
+                    save.push(to_u8(&map[x][y]));
+                }
+            }
+            for girl in &girls{
+                save.push(girl.rot as u8);
+                save.push(girl.x as u8);
+                save.push(girl.y as u8);
+                save.push((girl.money/255) as u8);
+                save.push((girl.money%255) as u8);
+                save.push(girl.col as u8);
+                save.push(girlmodetou8(girl.mode.clone()));
+            }
+            //println!("{:?}",save);
+            std::fs::write("saved.city", save).unwrap();
+        }
     }
 }
 
@@ -1121,3 +1182,73 @@ fn draw_text(b:&mut RaylibDrawHandle<'_>, fonts: &[Font;4], txt: &str, x:i32,y:i
 }
 
 //("depress",2,502,20,Color::BLACK);
+
+fn to_u8 (tile:&Tile) -> u8{
+    let mut tinf = 0;
+    if tile.tile==TileType::Grass{
+        tinf = 0;
+    }
+    if tile.tile==TileType::Ball{
+        tinf = 1;
+    }
+    if tile.tile==TileType::A{
+        tinf = 2;
+    }
+    if tile.tile==TileType::Factory{
+        tinf = 3;
+    }
+    if tile.tile==TileType::House{
+        tinf = 4;
+    }
+    if tile.tile==TileType::River{
+        tinf = 5;
+    }
+    if tile.tile==TileType::Bridge{
+        tinf = 6;
+    }
+    if tile.tile==TileType::Tree{
+        tinf = 7;
+    }
+    if tile.tile==TileType::Rock{
+        tinf = 8;
+    }
+    if tile.tile==TileType::Bush{
+        tinf = 9;
+    }
+    if tile.tile==TileType::Wall{
+        tinf = 10;
+    }
+    if tile.tile==TileType::Sculpture{
+        tinf = 11;
+    }
+    if tile.tile==TileType::Road{
+        tinf = 12;
+    }
+
+    if tile.height == 1{
+        tinf+=16
+    }
+    if tile.height == 2{
+        tinf+=32
+    }
+    return tinf;
+}
+
+fn girlmodetou8(mode:GirlModes) -> u8{
+    if mode == GirlModes::Idle{
+        return 0;
+    }
+    if mode == GirlModes::Going{
+        return 1;
+    }
+    if mode == GirlModes::Attent{
+        return 2;
+    }
+    if mode == GirlModes::Interact{
+        return 3;
+    }
+    if mode == GirlModes::Work{
+        return 4;
+    }
+    return 0;
+}
