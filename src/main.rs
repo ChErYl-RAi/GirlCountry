@@ -122,7 +122,7 @@ fn main(){
         "their own monies,\nwhich will return\nto the FUND each\nmonth.",
         ""
     ];
-    let mut msgnum = 8;
+    let mut msgnum = 0;
     let mut message = messages[msgnum];
 
     let mut girls:Vec<Girl>= vec![];
@@ -162,6 +162,14 @@ fn main(){
         rl.load_texture(&thread, "assets/building9.png").unwrap(),
         rl.load_texture(&thread, "assets/building10.png").unwrap(),
         rl.load_texture(&thread, "assets/building11.png").unwrap(),
+    ];
+
+    let w_rain = vec![
+        rl.load_texture(&thread, "assets/rain0000.png").unwrap(),
+        rl.load_texture(&thread, "assets/rain0001.png").unwrap(),
+        rl.load_texture(&thread, "assets/rain0002.png").unwrap(),
+        rl.load_texture(&thread, "assets/rain0003.png").unwrap(),
+        rl.load_texture(&thread, "assets/rain0004.png").unwrap(),
     ];
 
     let mut res_wood =  100;
@@ -300,8 +308,8 @@ fn main(){
     let bgc = Color::from_hex("011800").unwrap();
     let sky = Color::from_hex("a1afd4").unwrap();
 
-
-
+    let mut frame = rand::random_range(0..5);
+    let mut fall = 0.0;
     let mut abuildtimer=0.0;
     let mut bbuildtimer=0.0;
     let mut cbuildtimer=0.0;
@@ -311,7 +319,8 @@ fn main(){
     let mut progress3;
     let mut progress4;
 
-    let mut month = rand::random_range(0..13) ;
+    let mut month = 5;
+    //rand::random_range(0..13) ;
     let months = vec![
         "January",
         "February",
@@ -982,12 +991,20 @@ fn main(){
         
 
 
-        // ui starts right around here i think
-
+        // weather 
+        fall-=1.0;
+        frame+=1;
         if month > 2 && month < 8 {
-            // add rain later
+            for xc in 0..6{
+                for yc in 0..6{
+                    d.draw_texture(&w_rain[(frame/15)%5], xc*154-(posx*1.1%154.0) as i32, yc*128-(((fall*5.0)+posy)*1.1) as i32 %128-128, Color::new(255,255,255,125));
+                    d.draw_texture(&w_rain[((frame+8)/15+3)%5], xc*154-(posx*0.9%154.0) as i32, yc*128-(((fall*5.0)+posy)*0.9) as i32 %128-128, Color::new(255,255,255,125));
+                }
+            }
         } 
 
+
+        // ui starts right around here i think
 
 
         if message != "" {
