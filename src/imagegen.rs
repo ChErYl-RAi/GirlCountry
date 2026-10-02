@@ -1,14 +1,55 @@
-use image::Pixel;
+use image::{DynamicImage, Pixel};
 use image::{GenericImageView, ImageBuffer, RgbaImage};
 
 use crate::TileType;
 use crate::Tile;
 use crate::Girl;
-use crate::GirlModes;
 
 
 pub fn makeimg(map:&Vec<Vec<Tile>>, girls:&Vec<Girl>) {
     let mut img = create_image();
+
+
+    
+    let bgirl_sprite= vec![
+        image::open("assets/charab1.png").unwrap(),
+        image::open("assets/charab2.png").unwrap(),
+        image::open("assets/charab3.png").unwrap(),
+        image::open("assets/charab4.png").unwrap(),
+        image::open("assets/charab5.png").unwrap(),
+        image::open("assets/charab6.png").unwrap(),
+        image::open("assets/charab7.png").unwrap(),
+        image::open("assets/charab8.png").unwrap(),
+    ];
+
+    let wgirl_sprite= vec![
+        image::open("assets/charaw1.png").unwrap(),
+        image::open("assets/charaw2.png").unwrap(),
+        image::open("assets/charaw3.png").unwrap(),
+        image::open("assets/charaw4.png").unwrap(),
+        image::open("assets/charaw5.png").unwrap(),
+        image::open("assets/charaw6.png").unwrap(),
+        image::open("assets/charaw7.png").unwrap(),
+        image::open("assets/charaw8.png").unwrap(),
+    ];
+
+    let grass = image::open("assets/grass.png").unwrap();
+    let tree = image::open("assets/tree.png").unwrap();
+    let bush = image::open("assets/bush.png").unwrap();
+    let path = image::open("assets/path.png").unwrap();
+    let stone = image::open("assets/stone.png").unwrap();
+    let ball = image::open("assets/ball.png").unwrap();
+    let a = image::open("assets/a.png").unwrap();
+    let factory = image::open("assets/factory.png").unwrap();
+    let house = image::open("assets/house.png").unwrap();
+    let water = image::open("assets/water.png").unwrap();
+    let bridge = image::open("assets/bridge.png").unwrap();
+    let sculpture = image::open("assets/sculpture.png").unwrap();
+    let wall = image::open("assets/wall.png").unwrap();
+
+
+
+
     for y in 0..50{
         for x in 0..50{
             if map[x as usize][y as usize].tile==TileType::River ||  map[x as usize][y as usize].tile==TileType::Bridge{
@@ -17,32 +58,32 @@ pub fn makeimg(map:&Vec<Vec<Tile>>, girls:&Vec<Girl>) {
                 img = embed_shape(img, x*64+32*y, (y as i32*22+73+15-map[x as usize][y  as usize].height*7) as u32);
             }
             if map[x as usize][y as usize].tile==TileType::Grass{
-                img = embed_image(img, "assets/grass.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &grass, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Tree{
-                img = embed_image(img, "assets/tree.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &tree, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Bush{
-                img = embed_image(img, "assets/bush.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &bush, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Road{
-                img = embed_image(img, "assets/path.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &path, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Rock{
-                img = embed_image(img, "assets/stone.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &stone, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Ball{
-                img = embed_image(img, "assets/ball.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &ball, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::A{
-                img = embed_image(img, "assets/a.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &a, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Factory{
-                img = embed_image(img, "assets/factory.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &factory, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::House{
-                img = embed_image(img, "assets/house.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &house, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::River{
-                img = embed_image(img, "assets/water.png", x*64+32*y, (y as i32*22+15+6) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &water, x*64+32*y, (y as i32*22+15+6) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Bridge{
-                img = embed_image(img, "assets/water.png", x*64+32*y, (y as i32*22+15+6) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
-                img = embed_image(img, "assets/bridge.png", x*64+32*y, (y as i32*22+15) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &water, x*64+32*y, (y as i32*22+15+6) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &bridge, x*64+32*y, (y as i32*22+15) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } else if map[x as usize][y as usize].tile==TileType::Wall{
-                img = embed_image(img, "assets/wall.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &wall, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             }  else if map[x as usize][y as usize].tile==TileType::Sculpture{
-                img = embed_image(img, "assets/sculpture.png", x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
+                img = embed_image(img, &sculpture, x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [(255-(map[x as usize][y  as usize].height*13)) as u8, (255-(map[x as usize][y  as usize].height*13)) as u8, 255]);
             } 
 
 
@@ -65,9 +106,9 @@ pub fn makeimg(map:&Vec<Vec<Tile>>, girls:&Vec<Girl>) {
             for girl in girls{
                 if girl.x == x as i32 && girl.y == y as i32{
                     if girl.col{
-                        img = embed_image(img, &("assets/charab".to_owned()+&(girl.rot+1).to_string()+".png"), x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [255, 255, 255]);
+                        img = embed_image(img, &bgirl_sprite[girl.rot as usize], x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [255, 255, 255]);
                     }else{
-                        img = embed_image(img, &("assets/charaw".to_owned()+&(girl.rot+1).to_string()+".png"), x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [255, 255, 255]);
+                        img = embed_image(img, &wgirl_sprite[girl.rot as usize], x*64+32*y, (y as i32*22+15-map[x as usize][y  as usize].height*7) as u32, [255, 255, 255]);
                     }
                 }
             }
@@ -79,8 +120,8 @@ pub fn makeimg(map:&Vec<Vec<Tile>>, girls:&Vec<Girl>) {
 
 }
 
-fn embed_image(mut img: RgbaImage, infile: &str, start_x: u32, start_y: u32, shade:[u8;3]) -> RgbaImage {
-    let logo = image::open(infile).unwrap();
+fn embed_image(mut img: RgbaImage, logo: &DynamicImage, start_x: u32, start_y: u32, shade:[u8;3]) -> RgbaImage {
+    //let logo = image::open(infile).unwrap();
 
     //println!("Embedding:  width={}, height={}", logo.width(), logo.height());
     //println!("Base image: width={}, height={}", img.width(), img.height());
@@ -111,7 +152,7 @@ fn embed_image(mut img: RgbaImage, infile: &str, start_x: u32, start_y: u32, sha
 fn embed_shape(mut img: RgbaImage, start_x: u32, start_y: u32) -> RgbaImage {
 
     for x in 0..64 {
-        for y in 0..4704 {
+        for y in 0..1078 {
             if start_x+x<4704 && start_y+y<1078{
                 *img.get_pixel_mut(start_x + x, start_y + y) = image::Rgba([1, 24, 0,255]);
             }

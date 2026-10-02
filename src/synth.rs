@@ -4,7 +4,6 @@ use rodio::{Source, mixer::mixer, source::{SawtoothWave, SineWave, SquareWave, W
 
 struct Tune {
     bpm:f32,
-    tracks:i32,
     patterns:Vec<Vec<f32>>,
     song:Vec<Vec<i32>>,
     volumes:Vec<Vec<f32>>,
@@ -43,7 +42,6 @@ pub fn play(month: &str) {
     let mut currentmusic = Tune
     {
         bpm:120.0,
-        tracks:1,
         instruments: vec![
             Instruments::Saw
         ],
@@ -71,7 +69,6 @@ pub fn play(month: &str) {
     let january = Tune
     {
         bpm:160.0,
-        tracks:5,
         instruments: vec![
             Instruments::Saw,
             Instruments::Sqr,
@@ -160,7 +157,6 @@ pub fn play(month: &str) {
     let february = Tune
     {
         bpm:160.0,
-        tracks:5,
 
         instruments:vec![
             Instruments::Sine,
@@ -203,7 +199,6 @@ pub fn play(month: &str) {
 
     let mids = Tune {
         bpm:135.0,
-        tracks: 10,
         instruments: vec![
             Instruments::Sqr, // beeps
             Instruments::Sqr, // beeps
