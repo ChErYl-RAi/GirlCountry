@@ -730,3 +730,33 @@ pub fn tada() {
 
     player.sleep_until_end();
 }
+
+
+
+
+pub fn sus() {
+    let handle = rodio::DeviceSinkBuilder::open_default_sink()
+            .expect("open default audio stream");
+    let player = rodio::Player::connect_new(&handle.mixer());
+    let sawmix = mixer(NonZeroU16::new(1).unwrap(), NonZeroU32::new(48000).unwrap());
+
+    for i in 0..5{
+        let source = SineWave::new(130.81 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(6.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(6.2));
+        sawmix.0.add(source);
+    }
+    for i in 0..5{
+        let source = SineWave::new(329.63 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(6.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(6.2));
+        sawmix.0.add(source);
+    }
+    for i in 0..5{
+        let source = SineWave::new(392.0 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(6.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(6.2));
+        sawmix.0.add(source);
+    }
+    for i in 0..5{
+        let source = SineWave::new(493.88 * (i*2+1) as f32).take_duration(Duration::from_secs_f32(6.2)).amplify(0.05/((i+1) as f32)).fade_out(Duration::from_secs_f32(6.2));
+        sawmix.0.add(source);
+    }
+    player.append(sawmix.1);
+
+    player.sleep_until_end();
+}

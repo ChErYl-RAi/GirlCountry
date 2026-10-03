@@ -171,6 +171,22 @@ fn main(){
         rl.load_texture(&thread, "assets/rain0003.png").unwrap(),
         rl.load_texture(&thread, "assets/rain0004.png").unwrap(),
     ];
+    
+    let w_snow = vec![
+        rl.load_texture(&thread, "assets/snow0000.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0001.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0002.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0003.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0004.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0005.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0006.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0007.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0008.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0009.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0010.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0011.png").unwrap(),
+        rl.load_texture(&thread, "assets/snow0012.png").unwrap(),
+    ];
 
     let mut res_wood =  100;
     let mut res_food =  100;
@@ -308,7 +324,10 @@ fn main(){
     let bgc = Color::from_hex("011800").unwrap();
     let sky = Color::from_hex("a1afd4").unwrap();
 
+    let hemi = rand::random_bool(0.5);
     let mut frame = rand::random_range(0..5);
+    let mut rainfade = 0;
+    let mut snowfade = 0;
     let mut fall = 0.0;
     let mut abuildtimer=0.0;
     let mut bbuildtimer=0.0;
@@ -319,8 +338,7 @@ fn main(){
     let mut progress3;
     let mut progress4;
 
-    let mut month = 5;
-    //rand::random_range(0..13) ;
+    let mut month = rand::random_range(0..13) ;
     let months = vec![
         "January",
         "February",
@@ -340,9 +358,63 @@ fn main(){
     let mus1 =months.clone();
     let mxs1 = month.clone();
 
-    let mut music = thread::spawn(move || {
-        synth::play(mus1[mxs1]);
+    
+    let mut ismenu =true;
+    let strum:thread::JoinHandle<()> = thread::spawn(move || {
+        synth::sus();
     });
+    let mut menurotation=0;
+    let mut menucol: Vec<bool> = vec![];
+    for _bol in 0..12{
+        menucol.push(rand::random_bool(0.6))
+    }
+    let mut menujump=0;
+    while !rl.window_should_close() && ismenu {
+        
+        menurotation+=1;
+        menujump+=1;
+
+        let mut d = rl.begin_drawing(&thread);
+        d.clear_background(sky);
+
+        for husi in 0..12{
+            if menucol[husi]{
+                d.draw_texture(&bgirl_sprite[((menurotation/10)+husi)%8], husi as i32*64, 470-((70.0*(menujump as f32 / 46.0 + (husi) as f32/4.0).sin()) as i32).abs(), Color::WHITE);
+            } else {
+                d.draw_texture(&wgirl_sprite[((menurotation/10)+husi)%8], husi as i32*64, 470-((70.0*(menujump as f32 / 46.0 + (husi) as f32/4.0).sin()) as i32).abs(), Color::WHITE);
+            }
+        }
+        draw_border_text(&mut d, &font, "GirlCountry",50,5,5);
+        
+        draw_border_text(&mut d, &font, "Press E to enter the game\nPress U to enter UNLIMITED* mode\nPress L to enter load previous game (not yet implemented)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n *not actually UNLIMITED",25,5,60);
+
+        if d.is_key_pressed(KeyboardKey::KEY_E){
+            ismenu=false;
+        }
+        if d.is_key_pressed(KeyboardKey::KEY_U){
+            ismenu=false;
+            res_monies = 999999;
+            res_food = 999999;
+            res_wood = 999999;
+            res_stone = 999999;
+            msgnum=13;
+            message="";
+        }
+    }
+    if strum.is_finished(){
+        strum.join().unwrap();
+    }
+
+    let mut music:thread::JoinHandle<()> = thread::spawn(move || {
+            synth::mynothing();
+        });
+
+    if !rl.window_should_close() {
+        music = thread::spawn(move || {
+            synth::play(mus1[mxs1]);
+        });
+    }
+
 
 
     while !rl.window_should_close() {
@@ -426,6 +498,11 @@ fn main(){
                 res_monies+=(gip.money as f32*0.05) as i32;
                 gip.money = (gip.money as f32 * 0.95) as i32;
             }
+            let gpil = girls.len();
+            for gip in &mut girls{
+                gip.money += (res_monies as f32 * 0.11 / gpil as f32) as i32;
+            }
+            res_monies = (res_monies as f32 * 0.89) as i32;
             month+=1;
             if month ==13 { month =0; } ;
             bellring=true;
@@ -466,6 +543,27 @@ fn main(){
                         girl.mode=GirlModes::Work;
                     }
                     if map[x as usize][y as usize].progress<12 && girl.mode==GirlModes::Work{
+                        if x-1 == girl.x && y == girl.y-1 {
+                            girl.rot=4;
+                        }
+                        else if x+1 == girl.x && y == girl.y+1 {
+                            girl.rot=0;
+                        }
+                        else if x == girl.x && y-1 == girl.y {
+                            girl.rot=2;
+                        }
+                        else if x == girl.x && y+1 == girl.y {
+                            girl.rot=6;
+                        }
+                    }
+                    
+                    
+
+                    if ((x-1 == girl.x && y == girl.y-1) || (x+1 == girl.x && y == girl.y+1) || (x == girl.x && y-1 == girl.y) || (x == girl.x && y+1 == girl.y)) && map[x as usize][y as usize].tile==TileType::Factory && girl.mode==GirlModes::Idle{
+                        girlnum+=1;
+                        girl.mode=GirlModes::Work;
+                    }
+                    if map[x as usize][y as usize].tile == TileType::Factory && girl.mode==GirlModes::Work{
                         if x-1 == girl.x && y == girl.y-1 {
                             girl.rot=4;
                         }
@@ -994,14 +1092,84 @@ fn main(){
         // weather 
         fall-=1.0;
         frame+=1;
-        if month > 2 && month < 8 {
-            for xc in 0..6{
-                for yc in 0..6{
-                    d.draw_texture(&w_rain[(frame/15)%5], xc*154-(posx*1.1%154.0) as i32, yc*128-(((fall*5.0)+posy)*1.1) as i32 %128-128, Color::new(255,255,255,125));
-                    d.draw_texture(&w_rain[((frame+8)/15+3)%5], xc*154-(posx*0.9%154.0) as i32, yc*128-(((fall*5.0)+posy)*0.9) as i32 %128-128, Color::new(255,255,255,125));
+
+        if hemi {
+
+            if month > 2 && month < 9 {
+                if month == 8 {
+                    if rainfade > 0{
+                        rainfade-=1;
+                    }
+                }else{
+                    if rainfade < 125{
+                        rainfade+=1;
+                    }
                 }
-            }
-        } 
+                for xc in 0..6{
+                    for yc in 0..6{
+                        d.draw_texture(&w_rain[(frame/15)%5], xc*154-(posx*1.1%154.0) as i32, yc*128-(((fall*5.0)+posy)*1.1) as i32 %128-128, Color::new(255,255,255,rainfade));
+                        d.draw_texture(&w_rain[((frame+8)/15+3)%5], xc*154-(posx*0.9%154.0) as i32, yc*128-(((fall*5.0)+posy)*0.9) as i32 %128-128, Color::new(255,255,255,rainfade));
+                    }
+                }
+            } 
+
+            if month < 3 || month > 10 {
+                if month == 2 {
+                    if snowfade > 0{
+                        snowfade-=1;
+                    }
+                }else{
+                    if snowfade < 125{
+                        snowfade+=1;
+                    }
+                }
+                for xc in 0..6{
+                    for yc in 0..6{
+                        d.draw_texture(&w_snow[(frame/15)%13], xc*154-(posx*1.1%154.0) as i32, yc*128-((fall+posy)*1.1) as i32 %128-128, Color::new(255,255,255,snowfade));
+                        d.draw_texture(&w_snow[((frame+8)/15+3)%13], xc*154-(posx*0.9%154.0) as i32, yc*128-((fall+posy)*0.9) as i32 %128-128, Color::new(255,255,255,snowfade));
+                    }
+                }
+            } 
+
+        } else {
+            
+            if month > 9 || month < 3 {
+                if month == 3 {
+                    if rainfade > 0{
+                        rainfade-=1;
+                    }
+                }else{
+                    if rainfade < 125{
+                        rainfade+=1;
+                    }
+                }
+                for xc in 0..6{
+                    for yc in 0..6{
+                        d.draw_texture(&w_rain[(frame/15)%5], xc*154-(posx*1.1%154.0) as i32, yc*128-(((fall*5.0)+posy)*1.1) as i32 %128-128, Color::new(255,255,255,rainfade));
+                        d.draw_texture(&w_rain[((frame+8)/15+3)%5], xc*154-(posx*0.9%154.0) as i32, yc*128-(((fall*5.0)+posy)*0.9) as i32 %128-128, Color::new(255,255,255,rainfade));
+                    }
+                }
+            } 
+
+            if month < 10 && month > 4 {
+                if month == 9 {
+                    if snowfade > 0{
+                        snowfade-=1;
+                    }
+                }else{
+                    if snowfade < 125{
+                        snowfade+=1;
+                    }
+                }
+                for xc in 0..6{
+                    for yc in 0..6{
+                        d.draw_texture(&w_snow[(frame/15)%13], xc*154-(posx*1.1%154.0) as i32, yc*128-((fall+posy)*1.1) as i32 %128-128, Color::new(255,255,255,snowfade));
+                        d.draw_texture(&w_snow[((frame+8)/15+3)%13], xc*154-(posx*0.9%154.0) as i32, yc*128-((fall+posy)*0.9) as i32 %128-128, Color::new(255,255,255,snowfade));
+                    }
+                }
+            } 
+
+        }
 
 
         // ui starts right around here i think
