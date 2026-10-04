@@ -90,8 +90,8 @@ while True:
                         vols.append( 0.0 )
                     else:
                         vols.append( 1.0 )
-                print(petrn)
-                print(vols)
+                print("vec!",petrn, ",")
+                print("vec!",vols, ",")
             if event.key == K_UP:
                 updown += 1
             if event.key == K_DOWN:
