@@ -2,11 +2,18 @@
 name = "girlcountry"
 version = "0.1.0"
 edition = "2024"
+build = "src/build.rs"
+
+[build-dependencies]
+winres = "0.1"
 
 [dependencies]
 image = "0.25.10"
+itertools = "0.15.0"
 noise = "0.9.0"
 pathfinding = "4.16.0"
 rand = "0.10.2"
 raylib = "6.0.0"
 rodio = { version = "0.22.2", features = ["wav_output"] }
+rustysynth = "1.3.7"
+tinyaudio = "2.0.0"

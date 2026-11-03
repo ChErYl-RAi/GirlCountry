@@ -79,7 +79,7 @@ while True:
             if event.key == K_p:
                 for i in range(len(pattern[0])):
                     if pattern[0][i]!=0:
-                        res = subprocess.Popen(["./girlsynth",  str(pattern[0][i]) ] )
+                        res = subprocess.Popen(["wsl", "./girlsynth",  str(pattern[0][i]) ] )
                     sleep(0.1245)
             if event.key == K_e:
                 petrn = []
@@ -108,7 +108,7 @@ while True:
                 if mp[0]>100 and mp[0]:
                     if math.floor((mp[0]-100)/30) < 16:
                         pattern[patt][math.floor((mp[0]-100)/30)] = math.floor(32-mp[1]/15)+1+updown+11
-                        res = subprocess.Popen(["./girlsynth",  str(math.floor(32-mp[1]/15)+1+updown+11) ] )
+                        res = subprocess.Popen(["wsl", "./girlsynth",  str(math.floor(32-mp[1]/15)+1+updown+11) ] )
                 for i in range(3):
                     if mp[0] > 15 + 30*i and mp[0] < 15 + 30*(i+1) and mp[1] > 15 and mp[1] < 30:
                         adsr=i
