@@ -21,7 +21,11 @@ pub fn play (month: &str){
     let mut right: Vec<f32> = vec![0_f32; params.channel_sample_count];
 
     // Load the SoundFont.
-    let mut sf2 = File::open("assets/midi.sf2").unwrap();
+    let mut msf = "assets/midi.sf2";
+    if month=="March"{
+        msf="assets/mar.sf2";
+    }
+    let mut sf2 = File::open(msf).unwrap();
     let sound_font = Arc::new(SoundFont::new(&mut sf2).unwrap());
 
     // Load the MIDI file.
@@ -33,12 +37,21 @@ pub fn play (month: &str){
     }else if month=="March"{
         song = "march";
     }else if month=="April"{
-        song = "april";
+        song = "feuill";
     }else if month=="May"{
         song = "may";
     }else if month=="Mids"{
         song = "mids";
+    }else if month=="June"{
+        song = "hellishfire";
+    }else if month=="September"{
+        song = "sept";
+    }else if month=="November"{
+        song = "eterno";
+    }else if month=="December"{
+        song = "thankgoodnessitsnotfestivehere";
     }
+    
     let mut mid = File::open("assets/".to_owned() + song + ".mid").unwrap();
     let midi_file = Arc::new(MidiFile::new(&mut mid).unwrap());
 
@@ -62,5 +75,5 @@ pub fn play (month: &str){
     .unwrap();
     
     // Wait for 10 seconds.
-    std::thread::sleep(std::time::Duration::from_millis(midi_file.get_length() as u64 *4000));
+    std::thread::sleep(std::time::Duration::from_millis((midi_file.get_length() *4000.0) as u64 ));
 }

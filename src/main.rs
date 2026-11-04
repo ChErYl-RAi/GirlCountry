@@ -342,7 +342,7 @@ fn main(){
     let mut progress3;
     let mut progress4;
 
-    let mut month = rand::random_range(0..13) ;
+    let mut month = rand::random_range(0..13); //
     let months = vec![
         "January",
         "February",
@@ -359,8 +359,6 @@ fn main(){
         "December"
     ];
 
-    let mus1 =months.clone();
-    let mxs1 = month.clone();
 
     
     let mut ismenu =true;
@@ -390,7 +388,7 @@ fn main(){
         }
         draw_border_text(&mut d, &font, "GirlCountry",50,5,5);
         
-        draw_border_text(&mut d, &font, "Press E to enter the game\nPress U to enter UNLIMITED* mode\nPress L to enter load previous game (not yet implemented)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n *not actually UNLIMITED",25,5,60);
+        draw_border_text(&mut d, &font, "Press E to enter the game\nPress U to enter UNLIMITED* mode\nPress L to enter load previous game\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n *not actually UNLIMITED",25,5,60);
 
         if d.is_key_pressed(KeyboardKey::KEY_E){
             ismenu=false;
@@ -404,11 +402,56 @@ fn main(){
             msgnum=13;
             message="";
         }
+        if d.is_key_pressed(KeyboardKey::KEY_L) {
+            //std::fs::write("saved.city", save).unwrap();
+            let mut save: Vec<u8> = vec![];
+            save = std::fs::read("saved.city").unwrap();
+            month = save[0] as usize;
+            msgnum = save[1] as usize;
+            message = messages[msgnum];
+            res_monies = save[2] as i32 *256 + save[3] as i32 - 32767;
+            res_food = save[4] as i32 *256 + save[5] as i32;
+            res_wood = save[6] as i32 *256 + save[7] as i32;
+            res_stone = save[8] as i32 *256 + save[9] as i32;
+            let mut tmp_looper = 0;
+            for y in 0..50{                      
+                for x in 0..50{                  
+                    map[x][y] = u8_to(save[10+tmp_looper]);
+                    tmp_looper+=1;
+                }                                
+            }
+            girls = vec![];
+            let girl_count = (save.len() - 2510) / 7;
+            for girldat in 0..girl_count{
+                let mut tmp_girl = Girl { x: 0, y: 0, rot: 0, col: true, mode: GirlModes::Idle, cooldown: 0.0, destination: vec![0,0], money: 5 };
+                tmp_girl.rot = save[2510 + girldat*7] as i32;
+                tmp_girl.x = save[2510 + girldat*7 +1] as i32;
+                tmp_girl.y = save[2510 + girldat*7 +2] as i32;
+                tmp_girl.money = save[2510 + girldat*7 +3] as i32 * 256 ;
+                tmp_girl.money += save[2510 + girldat*7 +4] as i32 ;
+                tmp_girl.col = save[2510 + girldat*7 +5] != 0 ;
+                tmp_girl.mode = u8togirlmode(save[2510 + girldat*7 +6]);
+
+                girls.push(tmp_girl);
+                
+            }
+            
+            //for girl in &girls{
+            //    save.push(girlmodetou8(girl.mode.clone()));
+            //}
+            ////println!("{:?}",save);
+            
+            ismenu = false;
+            
+        }
     }
     //if strum.is_finished(){
     //    strum.join().unwrap();
     //}
 
+    let mus1 =months.clone();
+    let mxs1 = month.clone();
+    
     let mut music:thread::JoinHandle<()> = thread::spawn(move || {
             synth::mynothing();
         });
@@ -951,7 +994,7 @@ fn main(){
                 if dx * 22 + dy * 32 <= 32 * 22 {
                     d.draw_texture(&cursor,  64*x+32*y-(posx.round() as i32), 22*y-(posy.round() as i32)-map[x as usize][y  as usize].height*7, Color::WHITE);
 
-                    if d.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) && paintbrushtype==BrushType::Tile{
+                    if d.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) && paintbrushtype==BrushType::Tile{
                         let mut canyou = true;
 
                         for girl in &girls{
@@ -1300,14 +1343,14 @@ fn main(){
         if res_monies< -32767{
             res_monies=-32767;
         }
-        if res_food>65534{
-            res_food=65534;
+        if res_food>65535{
+            res_food=65535;
         }
-        if res_wood>65534{
-            res_wood=65534;
+        if res_wood>65535{
+            res_wood=65535;
         }
-        if res_stone>65534{
-            res_stone=65534;
+        if res_stone>65535{
+            res_stone=65535;
         }
 
         if d.is_key_pressed(KeyboardKey::KEY_I) && d.is_key_down(KeyboardKey::KEY_LEFT_CONTROL) {
@@ -1317,14 +1360,14 @@ fn main(){
             let mut save: Vec<u8> = vec![];
             save.push(month as u8);
             save.push(msgnum as u8);
-            save.push(((res_monies+32767)/255)as u8);
-            save.push(((res_monies+32767)%255)as u8);
-            save.push((res_food/255) as u8);
-            save.push((res_food%255) as u8);
-            save.push((res_wood/255) as u8);
-            save.push((res_wood%255) as u8);
-            save.push((res_stone/255) as u8);
-            save.push((res_stone%255) as u8);
+            save.push(((res_monies+32767)/256)as u8);
+            save.push(((res_monies+32767)%256)as u8);
+            save.push((res_food/256) as u8);
+            save.push((res_food%256) as u8);
+            save.push((res_wood/256) as u8);
+            save.push((res_wood%256) as u8);
+            save.push((res_stone/256) as u8);
+            save.push((res_stone%256) as u8);
             for y in 0..50{
                 for x in 0..50{
                     save.push(to_u8(&map[x][y]));
@@ -1334,8 +1377,8 @@ fn main(){
                 save.push(girl.rot as u8);
                 save.push(girl.x as u8);
                 save.push(girl.y as u8);
-                save.push((girl.money/255) as u8);
-                save.push((girl.money%255) as u8);
+                save.push((girl.money/256) as u8);
+                save.push((girl.money%256) as u8);
                 save.push(girl.col as u8);
                 save.push(girlmodetou8(girl.mode.clone()));
             }
@@ -1480,6 +1523,87 @@ fn to_u8 (tile:&Tile) -> u8{
     return tinf;
 }
 
+fn u8_to (tilb:u8) -> Tile{
+    let mut tinf = Tile{
+        height:0,
+        tile:TileType::Grass,
+        progress:12,
+    };
+    let mut tile = tilb as i32;
+    if tile-32>=0{
+        tinf.height=2;
+        tile-=32;
+    }else if tile-16>=0{
+        tinf.height=1;
+        tile-=16;
+    }else {
+        tinf.height=0;
+    }
+    match tile{
+        0 => tinf.tile=TileType::Grass,
+        1 => tinf.tile=TileType::Ball,
+        2 => tinf.tile=TileType::A,
+        3 => tinf.tile=TileType::Factory,
+        4 => tinf.tile=TileType::House,
+        5 => tinf.tile=TileType::River,
+        6 => tinf.tile=TileType::Bridge,
+        7 => tinf.tile=TileType::Tree,
+        8 => tinf.tile=TileType::Rock,
+        9 => tinf.tile=TileType::Bush,
+        10 => tinf.tile=TileType::Wall,
+        11 => tinf.tile=TileType::Sculpture,
+        12 => tinf.tile=TileType::Road,
+        _ => tinf.tile=TileType::Grass,
+    };
+    //if tile.tile==TileType::Grass{
+    //    tinf = 0;
+    //}
+    //if tile.tile==TileType::Ball{
+    //    tinf = 1;
+    //}
+    //if tile.tile==TileType::A{
+    //    tinf = 2;
+    //}
+    //if tile.tile==TileType::Factory{
+    //    tinf = 3;
+    //}
+    //if tile.tile==TileType::House{
+    //    tinf = 4;
+    //}
+    //if tile.tile==TileType::River{
+    //    tinf = 5;
+    //}
+    //if tile.tile==TileType::Bridge{
+    //    tinf = 6;
+    //}
+    //if tile.tile==TileType::Tree{
+    //    tinf = 7;
+    //}
+    //if tile.tile==TileType::Rock{
+    //    tinf = 8;
+    //}
+    //if tile.tile==TileType::Bush{
+    //    tinf = 9;
+    //}
+    //if tile.tile==TileType::Wall{
+    //    tinf = 10;
+    //}
+    //if tile.tile==TileType::Sculpture{
+    //    tinf = 11;
+    //}
+    //if tile.tile==TileType::Road{
+    //    tinf = 12;
+    //}
+//
+    //if tile.height == 1{
+    //    tinf+=16
+    //}
+    //if tile.height == 2{
+    //    tinf+=32
+    //}
+    return tinf;
+}
+
 fn girlmodetou8(mode:GirlModes) -> u8{
     if mode == GirlModes::Idle{
         return 0;
@@ -1497,4 +1621,15 @@ fn girlmodetou8(mode:GirlModes) -> u8{
         return 4;
     }
     return 0;
+}
+fn u8togirlmode(mode:u8) -> GirlModes{
+    match mode{
+        0 => {return GirlModes::Idle;}
+        1 => {return GirlModes::Going;}
+        2 => {return GirlModes::Attent;}
+        3 => {return GirlModes::Interact;}
+        4 => {return GirlModes::Work;}
+        _ => {return GirlModes::Idle;}
+    };
+    
 }
