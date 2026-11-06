@@ -44,8 +44,14 @@ pub fn play (month: &str){
         song = "mids";
     }else if month=="June"{
         song = "hellishfire";
+    }else if month=="July"{
+        song = "summer";
+    }else if month=="August"{
+        song = "gayasfuck";
     }else if month=="September"{
         song = "sept";
+    }else if month=="October"{
+        song = "autumnos";
     }else if month=="November"{
         song = "eterno";
     }else if month=="December"{
@@ -63,17 +69,81 @@ pub fn play (month: &str){
     // Play the MIDI file.
     sequencer.play(&midi_file, true);
 
+    let volume= match(month){
+        "January" => 0.7860465,
+        "February" => 1.0500427,
+        "March" => 1.3665526,
+        "April" => 2.5680714,
+        "May" => 1.0268383,
+        "Mids" => 0.42741734,
+        "June" => 0.5058949,
+        "July" => 1.0000643,
+        "August" => 0.36477283,
+        "September" => 0.5903791,
+        "October" => 0.61998796,
+        "November" => 0.45750082,
+        "December" => 1.7694685,
+        _ => 0.5,
+    };
+
     // Start the audio output.
     let _device = run_output_device(params, {
         move |data| {
             sequencer.render(&mut left[..], &mut right[..]);
             for (i, value) in left.iter().interleave(right.iter()).enumerate() {
-                data[i] = *value;
+                data[i] = *value * volume;
             }
         }
-    })
+    }) 
     .unwrap();
     
-    // Wait for 10 seconds.
-    std::thread::sleep(std::time::Duration::from_millis((midi_file.get_length() *4000.0) as u64 ));
+    if month=="February" || month=="March" || month=="July"{
+        std::thread::sleep(std::time::Duration::from_millis((midi_file.get_length() *2000.0) as u64 ));
+    }else{
+        std::thread::sleep(std::time::Duration::from_millis((midi_file.get_length() *4000.0) as u64 ));
+    }
+    
 }
+
+
+/*
+January.pcm
+0.7860465
+
+February.pcm
+1.0500427
+
+March.pcm
+1.3665526
+
+April.pcm
+2.5680714
+
+May.pcm
+1.0268383
+
+Mids.pcm
+0.42741734
+
+June.pcm
+0.5058949
+
+July.pcm
+1.0000643
+
+August.pcm
+0.36477283
+
+September.pcm
+0.5903791
+
+October.pcm
+0.61998796
+
+November.pcm
+0.45750082
+
+December.pcm
+1.7694685
+
+*/

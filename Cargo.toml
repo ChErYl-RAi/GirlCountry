@@ -10,6 +10,7 @@ winres = "0.1"
 [dependencies]
 image = "0.25.10"
 itertools = "0.15.0"
+nfd = "0.0.4"
 noise = "0.9.0"
 pathfinding = "4.16.0"
 rand = "0.10.2"

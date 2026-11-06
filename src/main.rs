@@ -17,6 +17,7 @@ mod synth;
 mod jumpies;
 mod imagegen;
 mod midi;
+mod openfiles;
 
 #[derive(PartialEq, Clone, Copy)]
 enum TileType {
@@ -111,19 +112,19 @@ fn main(){
     
     let mut msgbox = 200;
     let messages = vec![
-        "Welcome to\nGirlCountry. This\nMessage aims to\nexplain how to play.",
-        "You have no goal,\nyou only have to\nbuild a city.",
-        "There are, however,\nlimitations.",
-        "You need resources\nand money.",
-        "If the country gets\ninto >1000c debt,\nyou lose.",
-        "Your first task is\nto make one HOUSE\nper person",
-        "Good luck!",
         "",
-        "Congratulations!!!\nYou did it.",
-        "However!\nYou may notice the\nFUND has shrunk.",
-        "Your next task is\nto build FACTORIES\n(1 factory/5 girls)",
-        "In these, people get\ntheir own monies,\nwhich will return\nto the FUND each.",
-        "their own monies,\nwhich will return\nto the FUND each\nmonth.",
+        "",
+        "",                         //
+        "",                         // remnants of an old messageboard system.
+        "",                         // idk what to do w this
+        "",                         // lol
+        "",                         //
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
         ""
     ];
     let mut msgnum = 0;
@@ -365,6 +366,48 @@ fn main(){
 
     
     let mut ismenu =true;
+    let mut fopen = "saved.gcountry";
+    use std::env;
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() > 1 {
+        let fopen = &args[1];
+        let mut save: Vec<u8> = vec![];
+        save = std::fs::read(fopen).unwrap();
+        month = save[0] as usize;
+        msgnum = save[1] as usize;
+        message = messages[msgnum];
+        res_monies = save[2] as i32 *256 + save[3] as i32 - 32767;
+        res_food = save[4] as i32 *256 + save[5] as i32;
+        res_wood = save[6] as i32 *256 + save[7] as i32;
+        res_stone = save[8] as i32 *256 + save[9] as i32;
+        let mut tmp_looper = 0;
+        for y in 0..50{                      
+            for x in 0..50{                  
+                map[x][y] = u8_to(save[10+tmp_looper]);
+                tmp_looper+=1;
+            }                                
+        }
+        girls = vec![];
+        let girl_count = (save.len() - 2510) / 7;
+        for girldat in 0..girl_count{
+            let mut tmp_girl = Girl { x: 0, y: 0, rot: 0, col: true, mode: GirlModes::Idle, cooldown: 0.0, destination: vec![0,0], money: 5 };
+            tmp_girl.rot = save[2510 + girldat*7] as i32;
+            tmp_girl.x = save[2510 + girldat*7 +1] as i32;
+            tmp_girl.y = save[2510 + girldat*7 +2] as i32;
+            tmp_girl.money = save[2510 + girldat*7 +3] as i32 * 256 ;
+            tmp_girl.money += save[2510 + girldat*7 +4] as i32 ;
+            tmp_girl.col = save[2510 + girldat*7 +5] != 0 ;
+            tmp_girl.mode = u8togirlmode(save[2510 + girldat*7 +6]);
+            girls.push(tmp_girl);
+            
+        }
+        
+        ismenu = false;
+            
+    }
+    
+
     //let strum:thread::JoinHandle<()> = thread::spawn(move || {
     //    synth::sus();
     //});
@@ -391,7 +434,7 @@ fn main(){
         }
         draw_border_text(&mut d, &font, "GirlCountry",50,5,5);
         
-        draw_border_text(&mut d, &font, "Press E to enter the game\nPress U to enter UNLIMITED* mode\nPress L to enter load previous game\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n *not actually UNLIMITED",25,5,60);
+        draw_border_text(&mut d, &font, "Press E to enter the game\nPress U to enter UNLIMITED* mode\nPress L to enter load previous game\nPress T to enter load a template\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n *not actually UNLIMITED",25,5,60);
 
         if d.is_key_pressed(KeyboardKey::KEY_E){
             ismenu=false;
@@ -406,9 +449,9 @@ fn main(){
             message="";
         }
         if d.is_key_pressed(KeyboardKey::KEY_L) {
-            //std::fs::write("saved.city", save).unwrap();
+            //std::fs::write("saved.gcountry", save).unwrap();
             let mut save: Vec<u8> = vec![];
-            save = std::fs::read("saved.city").unwrap();
+            save = std::fs::read(openfiles::load(false)).unwrap();
             month = save[0] as usize;
             msgnum = save[1] as usize;
             message = messages[msgnum];
@@ -443,6 +486,23 @@ fn main(){
             //    save.push(girlmodetou8(girl.mode.clone()));
             //}
             ////println!("{:?}",save);
+            
+            ismenu = false;
+            
+        }
+        
+        if d.is_key_pressed(KeyboardKey::KEY_T) {
+            //std::fs::write("saved.gcountry", save).unwrap();
+            let mut save: Vec<u8> = vec![];
+            save = std::fs::read(openfiles::load(true)).unwrap();
+            let mut tmp_looper = 0;
+            for y in 0..50{                      
+                for x in 0..50{                  
+                    map[x][y] = u8_to(save[10+tmp_looper]);
+                    tmp_looper+=1;
+                }                                
+            }
+            
             
             ismenu = false;
             
@@ -1386,7 +1446,7 @@ fn main(){
                 save.push(girlmodetou8(girl.mode.clone()));
             }
             //println!("{:?}",save);
-            std::fs::write("saved.city", save).unwrap();
+            std::fs::write(openfiles::saveas()+".gcountry", save).unwrap();
         }
     }
 }
