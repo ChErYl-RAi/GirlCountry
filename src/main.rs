@@ -359,6 +359,9 @@ fn main(){
         "December"
     ];
 
+    //for mon in &months{
+    //    midi::export(mon);
+    //}
 
     
     let mut ismenu =true;
