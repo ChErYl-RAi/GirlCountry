@@ -614,6 +614,16 @@ fn main(){
             }
             res_monies = (res_monies as f32 * 0.89) as i32;
             month+=1;
+            for x in 0..50{
+                for y in 0..50{
+                    if map[x][y].tile == TileType::Factory{
+                        res_monies+=20;
+                        for gip in &mut girls{
+                            gip.money += 10;
+                        }
+                    }
+                }
+            }
             if month ==13 { month =0; } ;
             bellring=true;
             }
